@@ -1,5 +1,4 @@
-### Multi-marker and linear mixed model approaches to mapping disease and quantitative trait loci
-### Exercises for 2014 Kyoto Course on Bioinformatics
+## Multi-marker and linear mixed model approaches to mapping disease and quantitative trait loci: exercises for 2014 Kyoto Course on Bioinformatics
 
 Second Kyoto Course and Symposium on Bioinformatics for
 Next-generation Sequencing with Applications in Human Genetics<br>
