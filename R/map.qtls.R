@@ -1,20 +1,27 @@
-# This script maps QTLs using genotype and phenotype data separately
-# in the F2 and F34 samples, and in the combined (F2 + F34)
-# cohort. The statistical analysis accounts for varying relatedness
-# among the F2 and F34 samples. Pairwise relatedness is estimated
-# either using the pedigree data (relatedness = "pedigree") or using
-# the marker data (relatedness = "markers"). The QTL mapping results
-# in the F2 sample are compared against QTL mapping that does not
-# account for unequal relatedness; since F2 crosses share roughly the
-# same amount of their genome, the both QTL mapping approaches should
-# yield similar results.
+# This script maps QTLs across the genome in a single filial
+# generation of an advanced intercross line (AIL). We quantify support
+# for a QTL at each of the genotyped SNPs. We use two different
+# methods to assess support for an association between genotype and
+# phenotype:
 #
-# Here we only consider autosomal chromosomes; QTL mapping for the X
-# chromosome is conducted separately in map.X.qtls.R.
+#   qtl, which does not account for varying amounts of genetic
+#   sharing;
 #
-# Permutation tests are used to calculate thresholds for significant
-# LOD scores. This permutation tests assume individuals are not
-# related, which is a reasonable assumption under certain conditions.
+#   QTLRel, which attempts to account for confounding due to unequal
+#   relatedness by using the marker data to estimate relatedness
+#   between all pairs of mice in the sample.
+#
+# We also use two different approaches are to assess thresholds for
+# significance:
+#
+#   The first approach applies a permutation-based test to estimate
+#   the null distribution of LOD scores, in which unequal relatedness
+#   of the animals is not taken into account;
+#
+#   The second approach applies the method described in Abney, Ober
+#   and McPeek (American Journal of Human Genetics, 2002), in which
+#   the phenotype measurements are permuted according to a specified
+#   covariance matrix (which will be calculated using the markers).
 #
 
 # SCRIPT PARAMETERS
@@ -29,29 +36,28 @@ deps         <- 0.01       # Small number added to diagonal entries of
                            # variance components in combined analysis
                            # using pedigree data.
 
-# Save the results to this file.
-resultsfile <- "gwscan.rr.RData"
+# Map QTLs for this phenotype
+phenotypes <- "coatcolor"
 
-# Separately map QTLs for these phenotypes, and use these covariates
-# in QTL mapping for all phenotypes.
-phenotypes <- c("pretrainfreeze","freezetocontext","freezetocue",
-                "distperiphery","distcenter","propcenter")
-covariates <- c("sex","age","albino","agouti")
+# Use these covariates in the QTL mapping.
+# covariates <- c("sex","age","albino","agouti")
 
 # Initialize the random number generator.
 set.seed(7)
 
-# Load packages and function definitions.
-library(abind)
+# Load function and symbol definitions from libraries and source files.
 library(qtl)
 capture.output(library(QTLRel))
-source("misc.R")
 source("read.data.R")
-source("data.manip.R")
-source("mapping.tools.R")
 
 # LOAD DATA
 # ---------
+# Load the phenotype data.
+cat("Loading phenotype data.\n");
+pheno <- read.pheno("../data/pheno.csv")
+
+stop()
+
 # Load the genotype, phenotype and marker data for the combined
 # cohort. I remove the first two columns of the genotype data frame
 # containing the ID and generation, and set the row names for the
@@ -292,11 +298,3 @@ vcparams <- within(vcparams,{
   F34      <- data.frame(F34,check.names = FALSE,row.names = phenotypes)
   combined <- data.frame(combined,check.names = FALSE,row.names = phenotypes)
 })
-
-# SAVE RESULTS TO FILE
-# --------------------
-cat("Saving results to file.\n")
-save(file = resultsfile,
-     list = c("relatedness","map.function","num.perm","qtl.method",
-              "covariates","phenotypes","gwscan","additive",
-              "dominance","pve","vcparams","perms"))

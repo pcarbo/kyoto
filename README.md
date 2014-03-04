@@ -23,3 +23,23 @@ This program is distributed in the hope that it will be useful, but
 **merchantability** or **fitness for a particular purpose**. See
 [LICENSE](LICENSE) for more details.
 
+###Getting started
+
+Instructions for getting started go here.
+
+###Overview of data files
+
+Here is a brief summary of the files in the [data](data) directory:
+
++ [pheno.csv](data/pheno.csv) Phenotype data from 3-day fear
+conditioning study for 490 mice from the F2 cross, and 687 mice from
+the F34 cross. Includes other information such as gender, age and coat
+colour.
+
+###Overview of R source code files
+
+Here is a brief summary of the files in the [R](R) directory:
+
++ [read.data.R](code/read.data.R) Defines several functions for
+reading experimental cross data from files in comma-delimited ("csv")
+format.
