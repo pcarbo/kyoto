@@ -1,13 +1,14 @@
-# Exercises for 2014 Kyoto Course on Bioinformatics: multi-marker and linear mixed model (LMM) approaches to mapping disease and quantitative trait loci (QTLs)
+## Exercises for 2014 Kyoto Course on Bioinformatics: multi-marker and linear mixed model (LMM) approaches to mapping disease and quantitative trait loci (QTLs)
 
 **Second Kyoto Course and Symposium on Bioinformatics for
 Next-generation Sequencing with Applications in Human Genetics**<br>
+[Center for Genomic Medicine](http://www.genome.med.kyoto-u.ac.jp),
+Kyoto University<br>
 March 10-12, 2014
 
 Peter Carbonetto<br>
 Dept. of Human Genetics<br>
 University of Chicago
-
 
 ###License
 
