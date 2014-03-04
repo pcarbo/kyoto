@@ -26,21 +26,16 @@
 
 # SCRIPT PARAMETERS
 # -----------------
+generation   <- "F2"       # Map QTLs in mice from this generation.
 qtl.method   <- "hk"       # Which QTL mapping method to use in qtl.
-relatedness  <- "markers"  # How to estimate relatedness (either
-                           # "pedigree" or "markers").
 map.function <- "Haldane"  # Map function to use for interval mapping.
 num.perm     <- 1000       # Number of replicates for permutation test.
-jitter.amt   <- 1e-6       # Amount by which marker positions are adjusted.
-deps         <- 0.01       # Small number added to diagonal entries of
-                           # variance components in combined analysis
-                           # using pedigree data.
 
 # Map QTLs for this phenotype
-phenotypes <- "coatcolor"
+phenotypes <- "freezetocue"
 
 # Use these covariates in the QTL mapping.
-# covariates <- c("sex","age","albino","agouti")
+covariates <- c("sex","age","albino","agouti")
 
 # Initialize the random number generator.
 set.seed(7)
@@ -48,124 +43,41 @@ set.seed(7)
 # Load function and symbol definitions from libraries and source files.
 library(qtl)
 capture.output(library(QTLRel))
+source("misc.R")
 source("read.data.R")
+source("data.manip.R")
 
 # LOAD DATA
 # ---------
-# Load the phenotype data.
-cat("Loading phenotype data.\n");
+# Load the phenotype, phenotype and marker data for all the samples.
+cat("Loading phenotype, genotype and marker data.\n");
 pheno <- read.pheno("../data/pheno.csv")
+map   <- read.map("../data/map.csv")
+geno  <- read.geno("../data/geno.csv")
 
-stop()
+# Drop the X chromosome from the analysis.
+markers <- which(map$chr != "X")
+geno    <- geno[,markers]
+map     <- transform(map[markers,],chr = droplevels(chr))
 
-# Load the genotype, phenotype and marker data for the combined
-# cohort. I remove the first two columns of the genotype data frame
-# containing the ID and generation, and set the row names for the
-# genotype data to the mouse IDs. I adjust the map positions
-# (i.e. genetic distances) slightly so that no two markers have the
-# same position. I also reorder the rows of the phenotype and genotype
-# data so that F2 mice are in the top rows and the F34 mice are in the
-# bottom rows.
-cat("Loading data.\n")
-pheno           <- read.phenotypes("../data/pheno.csv")
-pheno           <- pheno[order(pheno$generation),]
-geno            <- read.genotypes("../data/geno.csv")
-geno            <- geno[order(geno$generation),]
-row.names(geno) <- geno$id
-geno            <- geno[-(1:2)]
-map             <- read.map("../data/map.csv",chromosomes)
-map             <- jitter.gendist(map,jitter.amt)
-
-# Read in the pedigree data. First I read in the pedigree table, and
-# remove the first two rows of the table, which correspond to the
-# inbred founders (generation F0). Since QTLRel does not allow the
-# founders to be inbred, I artificially create inbred founds by
-# including several generations of self-mating to produce the male and
-# female founders. In practice, we find that identity and kinship
-# coefficients for the F0, F1 and F2 now match approximately what you
-# would get if the founders were inbred (with ~1% error).
-if (relatedness == "pedigree") {
-  cat("Loading pedigree.\n")
-  ped <- read.pedigree("../data/ped.csv")
-  ped <- ped[-(1:2),]
-  ped <- rbind(read.pedigree("../data/inbred.ped.csv"),ped)
-  row.names(ped) <- NULL
-}
-
-# DISCARD SAMPLES
-# ---------------
-# I remove three mice from the F2 cohort because a large proportion of
-# their genotypes are not available.
+# Remove 3 mice from the F2 cohort because a large proportion of their
+# genotypes are not available.
 rows  <- which(!is.element(pheno$id,c("648A","738A","811A")))
 pheno <- pheno[rows,]
 geno  <- geno[rows,]
 
-# GET F2 and F34 CROSSES
-# ----------------------
-# Get the rows of the genotype and phenotype matrices corresponding to
-# the mice in the F2 and F34 crosses.
-F2.rows  <- which(pheno$generation == "F2")
-F34.rows <- which(pheno$generation == "F34")
-n2       <- length(F2.rows)
-n34      <- length(F34.rows)
+# GET F2 OR F34 CROSS
+# -------------------
+rows  <- which(pheno$generation == generation)
+pheno <- pheno[rows,]
+geno  <- geno[rows,]
 
-# DISCARD MARKERS
-# ---------------
-# For now, I drop the X chromosome from the analysis. I also remove
-# all markers that are *not* genotyped in the F34 cross.
-markers <- which(map$chr != "X" & !all.missing.col(geno[F34.rows,]))
-geno    <- geno[,markers]
-map     <- transform(map[markers,],chr = droplevels(chr))
+stop()
 
 # Get the markers genotyped in the F2 cross. Since I'm only retaining
 # markers that are genotyped in the F34 cross, any marker genotyped in
 # the F2 cross is also genotyped in the F34 cross.
 F2.markers <- which(!all.missing.col(geno[F2.rows,]))
-
-# TRANSFORM TRAITS
-# ----------------
-# I transform pretrainfreeze, freezetocontext, freezetocue and
-# propcenter to the log-odds scale using the logit(x) function (in
-# base 10). I transform sex, age, and create traits albino and agouti
-# from the coat colour data.
-cols        <- c("pretrainfreeze","freezetocontext",
-                 "freezetocue","propcenter")
-flogit      <- function (x) logit10(project.onto.interval(x,0.01,0.99))
-pheno[cols] <- lapply(pheno[cols],flogit)
-pheno       <- transform(pheno,
-                         sex    = factor2integer(sex) - 1,
-                         age    = age - mean(age),
-                         albino = as.integer(coatcolor == "W"),
-                         agouti = as.integer(coatcolor == "A"))
-
-# COMPUTE GENETIC MATRICES
-# ------------------------
-# Calculate the genetic matrices from the identity coeffcients for
-# both the F2 and F34 cohorts.
-if (relatedness == "pedigree") {
-  cat("Calculating genetic matrices from identity coefficients.\n")
-  capture.output(
-    F2.idcf <- cic(ped,ids = pheno$id[F2.rows],df = 100,
-                   ask = FALSE,verbose = FALSE))
-  load("../data/F34.idcf.RData")
-  F2.gm  <- genMatrix(F2.idcf)
-  F34.gm <- genMatrix(F34.idcf)
-
-  # Combine the F2 and F34 genetic matrices. I add a small scalar to
-  # the diagonal entries of the variance components to ensure that the
-  # covariance matrix for the polygenic effects remains symmetric
-  # positive definite.
-  n   <- n2 + n34
-  ids <- c(rownames(F2.gm$AA),rownames(F34.gm$AA))
-  gm  <- list(AA = rbind(cbind(F2.gm$AA,ones(n2,n34)),
-                        cbind(ones(n34,n2),F34.gm$AA)),
-              DD = rbind(cbind(F2.gm$DD,ones(n2,n34)/4),
-                         cbind(ones(n34,n2)/4,F34.gm$DD)))
-  gm$AA <- gm$AA + deps * eye(n)
-  gm$DD <- gm$DD + deps * eye(n)
-  dimnames(gm$AA) <- list(ids,ids)
-  dimnames(gm$DD) <- list(ids,ids)
-}
 
 # COMPUTE GENOTYPE PROBABILITIES
 # ------------------------------
@@ -174,12 +86,8 @@ if (relatedness == "pedigree") {
 # (AA, AB, BB become 1, 2, 3, respectively), and we replace any 
 # missing values with zeros.
 cat("Calculating probabilities of missing genotypes.\n")
-G  <- genotypes2counts(geno)
-G  <- zero.na(G)
-gp <- combine.genoprob(genoProb(G[F2.rows,],map,step = Inf,
-                                method = map.function,gr = 2),
-                       genoProb(G[F34.rows,],map,step = Inf,
-                                method = map.function,gr = 34))
+gp <- genoProb(zero.na(genotypes2counts(G)),map,step = Inf,
+               method = "Haldane",gr = generation)
 
 # Initialize storage for QTL mapping results (gwscan), parameter
 # estimates of variance components from QTLRel analysis (vcparams),
