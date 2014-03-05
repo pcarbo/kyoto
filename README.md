@@ -42,7 +42,7 @@ linkage disequilibrium are fairly predictable; (2) all observed
 alleles are common; and (3) in all cases we can trace an allele to one
 of the two inbred founders.
 
-![Autosomes in an intercross experiment.](/path/to/img.jpg)
+![Transmission of alleles in an F2 intercross.](figures/intercross.gif)
 
 In a traditional intercross, two inbred strains are crossed to obtain
 the first generation (F1) of mice.  In our case, the inbred founders
