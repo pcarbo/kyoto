@@ -26,21 +26,25 @@ This program is distributed in the hope that it will be useful, but
 ###Introduction
 
 The goal of this module is to explore the use of linear mixed models
-and multi-marker models to identify regions of the genome that are
-correlated with quantitative traits. While these statistical methods
-have been used in many studies to map genetic loci harbouring risk
-factors for complex diseases, here we will investigate these methods
-for mapping quantitative trait loci (QTLs) in advanced intercrosses of
-inbred mouse laboratory strains. We will try to get a better
-appreciation for the features of these approaches, and when they might
-be useful, and how to interpret the results of the analyses.
+(LMMs) and multi-marker models to identify regions of the genome that
+are correlated with quantitative traits. While LMMs and multi-marker
+mapping methods have been used to map the genetic loci that contribute
+to risk of complex diseases, here we will investigate these methods
+for mapping quantitative trait loci (QTLs) in mice, and specifically
+advanced intercrosses of inbred mouse laboratory strains. We will try
+to get a better appreciation for the features of these approaches, and
+when they might be useful, and how to interpret the results of the
+analyses.
 
 An advanced intercross population has several features that make it
 well-suited for exploring data analysis methods for genetic
 association studies. These features include: (1) the patterns of
 linkage disequilibrium are fairly predictable; (2) all observed
 alleles are common; and (3) in all cases we can trace an allele to one
-of the two inbred founders.
+of the two inbred founders. As a result, the genetic markers tell us
+directly whether alleles from a given pair of individuals are
+identical-by-descent (IBD), while in general (e.g. in human studies)
+we cannot make such an inference.
 
 ![Transmission of alleles in an F2 intercross.](figures/intercross.gif)
 **Transmission of alleles in an F2 intercross.** From *Broman and Sen,
