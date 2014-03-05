@@ -43,6 +43,8 @@ alleles are common; and (3) in all cases we can trace an allele to one
 of the two inbred founders.
 
 ![Transmission of alleles in an F2 intercross.](figures/intercross.gif)
+**Transmission of alleles in an F2 intercross.** From *Broman and Sen,
+A Guide to QTL Mapping with R/qtl, 2009.*
 
 In a traditional intercross, two inbred strains are crossed to obtain
 the first generation (F1) of mice.  In our case, the inbred founders
