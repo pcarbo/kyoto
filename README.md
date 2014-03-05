@@ -101,8 +101,14 @@ Here is a brief summary of the files in the [data](data) directory:
 
 + [pheno.csv](data/pheno.csv) Phenotype data from 3-day fear
 conditioning study for mice from the F2 and F34 generations of the
-advanced intercross line. Includes other information such as gender,
-age and coat colour.
+LG/J x SM/J advanced intercross line. Includes other information such
+as gender, age and coat colour.
+
++ [geno.csv](data/geno.csv) Genotypes at 4608 SNPs for mice from the
+F2 cross and the F34 cross.
+
++ [map.csv](data/map.csv) Information about the 4608 SNPs, including
+genetic distances and chromosomal positions (in bases).
 
 ###Overview of R source code files
 
