@@ -32,9 +32,9 @@ Instructions for getting started go here.
 Here is a brief summary of the files in the [data](data) directory:
 
 + [pheno.csv](data/pheno.csv) Phenotype data from 3-day fear
-conditioning study for 490 mice from the F2 cross, and 687 mice from
-the F34 cross. Includes other information such as gender, age and coat
-colour.
+conditioning study for mice from the F2 and F34 generations of the
+advanced intercross line. Includes other information such as gender,
+age and coat colour.
 
 ###Overview of R source code files
 

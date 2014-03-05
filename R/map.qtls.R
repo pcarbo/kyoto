@@ -26,13 +26,10 @@
 
 # SCRIPT PARAMETERS
 # -----------------
-generation   <- "F2"       # Map QTLs in mice from this generation.
-qtl.method   <- "hk"       # Which QTL mapping method to use in qtl.
-map.function <- "Haldane"  # Map function to use for interval mapping.
-num.perm     <- 1000       # Number of replicates for permutation test.
-
-# Map QTLs for this phenotype
-phenotypes <- "freezetocue"
+phenotype  <- "freezetocue" # Map QTLs for this phenotype
+generation <- "F2"          # Map QTLs in mice from this generation.
+qtl.method <- "hk"          # Which QTL mapping method to use in qtl.
+num.perm   <- 1000          # Number of replicates for permutation test.
 
 # Use these covariates in the QTL mapping.
 covariates <- c("sex","age","albino","agouti")
@@ -59,12 +56,6 @@ geno  <- read.geno("../data/geno.csv")
 markers <- which(map$chr != "X")
 geno    <- geno[,markers]
 map     <- transform(map[markers,],chr = droplevels(chr))
-
-# Remove 3 mice from the F2 cohort because a large proportion of their
-# genotypes are not available.
-rows  <- which(!is.element(pheno$id,c("648A","738A","811A")))
-pheno <- pheno[rows,]
-geno  <- geno[rows,]
 
 # GET F2 OR F34 CROSS
 # -------------------
