@@ -27,9 +27,10 @@
 # SCRIPT PARAMETERS
 # -----------------
 phenotype  <- "freezetocue" # Map QTLs for this phenotype
-generation <- "F2"          # Map QTLs in mice from this generation.
-qtl.method <- "hk"          # Which QTL mapping method to use in qtl.
-num.perm   <- 1000          # Number of replicates for permutation test.
+generation <- "F34"         # Map QTLs in mice from this generation.
+num.perm   <- 100           # Number of replicates for permutation test.
+threshold  <- 0.05          # Significance threshold ("alpha").
+ymax       <- 9             # Height of vertical axis.
 
 # Use these covariates in the QTL mapping.
 covariates <- c("sex","age","albino","agouti")
@@ -38,11 +39,13 @@ covariates <- c("sex","age","albino","agouti")
 set.seed(7)
 
 # Load function and symbol definitions from libraries and source files.
+library(lattice)
 library(qtl)
 capture.output(library(QTLRel))
 source("misc.R")
 source("read.data.R")
 source("data.manip.R")
+source("mapping.tools.R")
 
 # LOAD DATA
 # ---------
@@ -54,21 +57,27 @@ geno  <- read.geno("../data/geno.csv")
 
 # Drop the X chromosome from the analysis.
 markers <- which(map$chr != "X")
-geno    <- geno[,markers]
 map     <- transform(map[markers,],chr = droplevels(chr))
+geno    <- geno[,markers]
 
 # GET F2 OR F34 CROSS
 # -------------------
+# Keep only the mice from the selected generation.
 rows  <- which(pheno$generation == generation)
 pheno <- pheno[rows,]
 geno  <- geno[rows,]
 
-stop()
+# Get the markers genotyped in these mice.
+markers <- which(!all.missing.col(geno))
+map     <- map[markers,]
+geno    <- geno[,markers]
 
-# Get the markers genotyped in the F2 cross. Since I'm only retaining
-# markers that are genotyped in the F34 cross, any marker genotyped in
-# the F2 cross is also genotyped in the F34 cross.
-F2.markers <- which(!all.missing.col(geno[F2.rows,]))
+# Keep only samples for which we have all observations for the
+# phenotype and covariates.
+cols <- c(phenotype,covariates)
+rows <- which(none.missing.row(pheno[cols]))
+pheno <- pheno[rows,]
+geno  <- geno[rows,]
 
 # COMPUTE GENOTYPE PROBABILITIES
 # ------------------------------
@@ -77,123 +86,103 @@ F2.markers <- which(!all.missing.col(geno[F2.rows,]))
 # (AA, AB, BB become 1, 2, 3, respectively), and we replace any 
 # missing values with zeros.
 cat("Calculating probabilities of missing genotypes.\n")
-gp <- genoProb(zero.na(genotypes2counts(G)),map,step = Inf,
-               method = "Haldane",gr = generation)
+gp <- genoProb(zero.na(genotypes2counts(geno)),map,step = Inf,
+               gr = as.integer(substr(generation,2,3)),
+               method = "Haldane")
 
-# Initialize storage for QTL mapping results (gwscan), parameter
-# estimates of variance components from QTLRel analysis (vcparams),
-# parameter estimates of additive QTL effects for individual markers
-# (additive) and dominance QTL effects (dominance), and permutation
-# tests (perms).
-gwscan    <- list(F2.qtl   = NULL,
-                  F2.rel   = empty.scanone(map[F2.markers,]),
-                  F34      = empty.scanone(map),
-                  combined = empty.scanone(map))
-r         <- list(F2       = empty.scanone(map[F2.markers,]),
-                  F34      = empty.scanone(map),
-                  combined = empty.scanone(map))
-additive  <- r
-dominance <- r
-pve       <- r
-vcparams  <- list(F2 = NULL,F34 = NULL,combined = NULL)
-perms     <- list(F2 = NULL,F34 = NULL,combined = NULL)
+# ANALYSIS USING QTL
+# ------------------
+# Map QTLs using a simple linear regression approach that does not
+# correct for possible confounding to due relatedness.
+cat("Mapping QTLs for",phenotype,"in",nrow(pheno),"mice at",nrow(map),
+    "candidate SNPs,\n")
+if (length(covariates) > 0) {
+  cat("controlling for ",paste(covariates,collapse=" + "),".\n",sep="")
+} else {
+  cat("with no covariates included.\n")
+}
+cat("Mapping QTLs using qtl.\n")
 
-# ANALYSIS WITH F2 CROSS USING QTL
-# --------------------------------
-cat("QTL MAPPING WITH F2 CROSS USING qtl\n")
-out <- map.cross.qtl(pheno,geno,phenotypes,covariates,gp,
-                     F2.rows,F2.markers,qtl.method,num.perm,
-                     verbose = TRUE)
-gwscan$F2.qtl <- out$gwscan
-perms$F2      <- out$perms
+# Convert the experimental cross data to the format used by qtl, then
+# run the genome-wide scan using the qtl function "scanone".
+cross <- rel2qtl(pheno,geno,map)
+cross <- rel2qtl.genoprob(cross,gp)
+suppressWarnings(
+  gwscan.qtl <- scanone(cross,pheno.col = phenotype,
+                        addcovar = cross$pheno[covariates],
+                        model = "normal",method = "em",
+                        use = "all.obs"))
 
-# PERMUTATION TESTS FOR F34 AND COMBINED CROSSES
-# ----------------------------------------------
-# Perform permutation tests to calculate thresholds for significance
-# for F34 cross, ignoring relatedness between mice.
-cat("CALCULATING SIGNIFICANCE THRESHOLDS FOR F34 CROSS USING qtl\n")
-perms$F34 <- map.cross.qtl(pheno,geno,phenotypes,covariates,gp,
-                           F34.rows,NULL,qtl.method,num.perm,
-                           verbose = FALSE)$perms
+# Estimating the null distribution of the LOD scores using qtl.
+cat("Estimating null distribution of LOD scores using qtl.\n")
+suppressWarnings(
+  perms.qtl <- scanone(cross,pheno.col = phenotype,
+                       addcovar = cross$pheno[covariates],
+                       model = "normal",method = "em",
+                       use = "all.obs",n.perm = num.perm,
+                       verbose = FALSE))
 
-# Perform a permutation test to calculate thresholds for significance
-# for combined F2 and F34 cohort, ignoring relatedness between mice.
-cat("CALCULATING SIGNIFICANCE THRESHOLDS FOR COMBINED COHORT USING qtl\n")
-perms$combined <- map.cross.qtl(pheno,geno,phenotypes,covariates,gp,
-                                qtl.method = qtl.method,num.perm = num.perm,
-                                verbose = FALSE)$perms
+# ANALYSIS USING QTLRel
+# ---------------------
+# Map QTLs for all markers on a single chromosome using 'scanOne' from
+# the QTLRel library, in which pairwise relatedness is estimated
+# using all markers except the markers on the same chromosome as the
+# one being analyzed.
+cat("Mapping QTLs using QTLRel.\n")
+chromosomes <- levels(map$chr)
 
-# Repeat for each phenotype.
-for (phenotype in phenotypes) {
-  cat("PHENOTYPE =",toupper(phenotype),"\n")
-  cols <- c(phenotype,covariates)
+# Map QTLs separately for each chromosome.
+gwscan <- list()
+for (chr in chromosomes) {
   
-  # ANALYSIS WITH F2 CROSS USING QTLRel
-  # -----------------------------------
-  # Only analyze samples (i.e. rows of the genotype and phenotype
-  # matrices) for which the phenotype and all the covariates are
-  # observed.
-  cat("(a) QTL mapping with F2 cross using QTLRel\n")
-  F2.rows <- which(pheno$generation == "F2" &
-                   none.missing.row(pheno[cols]))
-  if (relatedness == "pedigree")
-    out <- map.cross.ped(pheno,geno,map,phenotype,covariates,F2.gm,gp,
-                         F2.rows,F2.markers,verbose = TRUE)
-  else if (relatedness == "markers")
-    out <- map.cross.rr(pheno,geno,map,phenotype,covariates,gp, 
-                        F2.rows,F2.markers,verbose = TRUE)
+  # Get the markers on the chromosome.
+  markers <- which(map$chr == chr)
+  cat("  * Mapping ",length(markers)," markers on chromosome ",chr,".\n",
+      sep="")
+
+  # Compute the (expected) relatedness matrix using all markers *except* 
+  # the markers on the current chromosome.
+  R <- rr.matrix(subset.genoprob(gp,which(map$chr != chr)))
+  dimnames(R) <- list(pheno$id,pheno$id)
+
+  # Use the relatedness matrix estimated from the marker data to
+  # estimate the variance components.
+  r <- estVC(pheno[,phenotype],pheno[,covariates],
+             v = list(AA = R,DD = NULL,AD = NULL,HH = NULL,
+                      MH = NULL,EE = diag(nrow(pheno))))
+
+  # Once we have the variance components estimated, build a matrix
+  # from the variance components. Note that the "AA" component here is
+  # the n x n relatedness matrix estimated from the marker data (R),
+  # and the "EE" component is the n x n identity matrix.
+  vc <- r$par["AA"] * r$v[["AA"]] +
+        r$par["EE"] * r$v[["EE"]]
   
-  # Get the parameter estimates and QTL mapping results.
-  gwscan$F2.rel[[phenotype]] <- out$gwscan$lod
-  additive$F2[[phenotype]]   <- out$gwscan$additive
-  dominance$F2[[phenotype]]  <- out$gwscan$dominance
-  pve$F2[[phenotype]]        <- out$gwscan$pve
-  vcparams$F2                <- rbind(vcparams$F2,out$vcparams)
-
-  # ANALYSIS WITH F34 CROSS USING QTLRel
-  # ------------------------------------
-  # Only analyze samples (i.e. rows of the genotype and phenotype
-  # matrices) for which the phenotype and all the covariates are
-  # observed.
-  cat("(b) QTL mapping with F34 cross using QTLRel\n")
-  F34.rows <- which(pheno$generation == "F34" &
-                    none.missing.row(pheno[cols]))
-  if (relatedness == "pedigree")
-    out <- map.cross.ped(pheno,geno,map,phenotype,covariates,F34.gm,gp,
-                         rows = F34.rows,verbose = TRUE)
-  else if (relatedness == "markers")
-    out <- map.cross.rr(pheno,geno,map,phenotype,covariates,gp,
-                        rows = F34.rows,verbose = TRUE)
-
-  # Get the parameter estimates and QTL mapping results.
-  gwscan$F34[[phenotype]]    <- out$gwscan$lod
-  additive$F34[[phenotype]]  <- out$gwscan$additive
-  dominance$F34[[phenotype]] <- out$gwscan$dominance
-  pve$F34[[phenotype]]       <- out$gwscan$pve
-  vcparams$F34               <- rbind(vcparams$F34,out$vcparams)
-
-  # ANALYSIS WITH F2 AND F34 SAMPLES USING QTLRel
-  # ---------------------------------------------
-  cat("(c) QTL mapping with combined F2 and F34 cohorts using QTLRel\n")
-  rows <- c(F2.rows,F34.rows)
-  if (relatedness == "pedigree")
-    out <- map.cross.ped(pheno,geno,map,phenotype,covariates,
-                         gm,gp,rows = rows,verbose = TRUE)
-  else if (relatedness == "markers")
-    out <- map.cross.rr(pheno,geno,map,phenotype,covariates,gp, 
-                        rows = rows,verbose = TRUE)
-
-  # Get the parameter estimates and QTL mapping results.
-  gwscan$combined[[phenotype]]    <- out$gwscan$lod
-  additive$combined[[phenotype]]  <- out$gwscan$additive
-  dominance$combined[[phenotype]] <- out$gwscan$dominance
-  pve$combined[[phenotype]]       <- out$gwscan$pve
-  vcparams$combined               <- rbind(vcparams$combined,out$vcparams)
+  # Compute LOD scores for all markers on the chromosome.
+  out <- scanOne(pheno[,phenotype],pheno[,covariates],geno[,markers],
+                 subset.genoprob(gp,markers),vc,test = "None")
+  gwscan[[chr]]     <- empty.scanone(map[markers,])
+  gwscan[[chr]]$lod <- out$p/(2*log(10))
 }
 
-# Add labels to the parameter estimates.
-vcparams <- within(vcparams,{
-  F2       <- data.frame(F2,check.names = FALSE,row.names = phenotypes)
-  F34      <- data.frame(F34,check.names = FALSE,row.names = phenotypes)
-  combined <- data.frame(combined,check.names = FALSE,row.names = phenotypes)
-})
+# Merge the QTLRel mapping results.
+gwscan.rel           <- do.call(rbind,gwscan)
+rownames(gwscan.rel) <- do.call(c,lapply(gwscan,rownames))
+
+# PLOT RESULTS FROM qtl AND QTLRel
+# --------------------------------
+trellis.device(width = 8,height = 2,title = "QTL mapping results")
+par(ps = 9,font.lab = 1,font.main = 1,mai = c(0.5,0.5,0.5,0.5))
+
+# Plot the QTL mapping results from qtl.
+plot(gwscan.qtl,incl.markers = FALSE,lwd = 4,bandcol = "powderblue",
+     col = "dodgerblue",ylim = c(0,ymax),gap = 0,xlab = "",ylab = "LOD",
+     main = paste0(phenotype,", ",generation," cross"))
+
+# Plot the QTL mapping results from QTLRel using the F2 cross.
+plot(gwscan.rel,incl.markers = FALSE,lwd = 2,bandcol = "powderblue",
+     col = "darkblue",ylim = c(0,ymax),gap = 0,add = TRUE)
+
+# Add the significance threshold to the plot.
+add.threshold(gwscan.qtl,perms = perms.qtl,alpha = threshold,gap = 0,
+              col = "darkorange",lty = "dotted")
