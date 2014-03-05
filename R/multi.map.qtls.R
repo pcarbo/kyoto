@@ -11,8 +11,8 @@ covariates <- NULL # c("sex","age","albino","agouti")
 # Candidate values of the variance of the residual (sigma), the prior
 # variance of the regression coefficients (sa), and the prior
 # log-odds of inclusion (log10odds)
-sigma     <- seq(1,10,2)
-sa        <- seq(0.1,0.4,0.05)
+sigma     <- seq(1,10,5)
+sa        <- seq(0.1,0.4,0.1)
 log10odds <- seq(-2,-1,0.25)
 
 # Initialize the random number generator.
@@ -104,8 +104,8 @@ cat("for",ns,"combinations of hyperparameters.\n")
 for (i in 1:ns) {
 
   # Run the coordinate ascent algorithm.
-  out <- varbvsoptimize(geno,pheno[,phenotype],sigma[i],sa[i],
-                        log(10)*log10odds[i],alpha0,mu0,verbose = TRUE)
+  out <- varbvsoptimize(geno,pheno[,phenotype],grid$sigma[i],grid$sa[i],
+                        log(10)*grid$log10odds[i],alpha0,mu0,verbose = FALSE)
   lnZ[i]    <- out$lnZ
   alpha[,i] <- out$alpha
   mu[,i]    <- out$mu

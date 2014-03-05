@@ -27,10 +27,11 @@
 
 # SCRIPT PARAMETERS
 # -----------------
-phenotype  <- "freezetocue" # Map QTLs for this phenotype.
-generation <- "F2"          # Map QTLs in mice from this generation.
-num.perm   <- 100           # Number of replicates for permutation test.
-threshold  <- 0.05          # Significance threshold ("alpha").
+phenotype    <- "freezetocue" # Map QTLs for this phenotype.
+generation   <- "F2"          # Map QTLs in mice from this generation.
+num.perm.qtl <- 100           # Replicates for qtl permutation test.
+num.perm.rel <- 100           # Replicates for QTLRel permutation test.
+threshold    <- 0.05          # Significance threshold ("alpha").
 
 # Use these covariates in the QTL mapping.
 covariates <- c("sex","age","albino","agouti")
@@ -46,6 +47,7 @@ source("misc.R")
 source("read.data.R")
 source("data.manip.R")
 source("mapping.tools.R")
+source("mvnpermute.R")
 
 # LOAD DATA
 # ---------
@@ -119,7 +121,7 @@ cat("Estimating null distribution of LOD scores using qtl.\n")
 suppressWarnings(
   perms.qtl <- scanone(cross,pheno.col = phenotype,addcovar = cov.data,
                        model = "normal",method = "em",use = "all.obs",
-                       n.perm = num.perm,verbose = FALSE))
+                       n.perm = num.perm.qtl,verbose = FALSE))
 
 # ESTIMATE GENETIC SHARING USING MARKERS
 # --------------------------------------
@@ -153,10 +155,12 @@ print(histogram(offdiag(R),breaks = seq(0.6,1.4,0.025),col = "dodgerblue",
 # using all markers except the markers on the same chromosome as the
 # one being analyzed.
 cat("Mapping QTLs using QTLRel.\n")
-chromosomes <- levels(map$chr)
+chromosomes     <- levels(map$chr)
+gwscan          <- list()
+perms           <- matrix(nrow = length(chromosomes),ncol = num.perm.rel)
+rownames(perms) <- chromosomes
 
 # Map QTLs separately for each chromosome.
-gwscan <- list()
 for (chr in chromosomes) {
   
   # Get the markers on the chromosome.
@@ -170,14 +174,15 @@ for (chr in chromosomes) {
 
   # Use the relatedness matrix estimated from the marker data to
   # estimate the variance components.
+  n <- nrow(pheno)
   if (is.null(covariates)) {
     r <- estVC(pheno[,phenotype],
                v = list(AA = R,DD = NULL,AD = NULL,HH = NULL,
-                        MH = NULL,EE = diag(nrow(pheno))))
+                        MH = NULL,EE = diag(n)))
   } else {
     r <- estVC(pheno[,phenotype],pheno[covariates],
                v = list(AA = R,DD = NULL,AD = NULL,HH = NULL,
-                        MH = NULL,EE = diag(nrow(pheno))))
+                        MH = NULL,EE = diag(n)))
   }
 
   # Once we have the variance components estimated, build a matrix
@@ -198,11 +203,40 @@ for (chr in chromosomes) {
   }
   gwscan[[chr]]     <- empty.scanone(map[markers,])
   gwscan[[chr]]$lod <- out$p/(2*log(10))
+
+  # Generate permutations to estimate the null
+  # distribution of the maximum LOD scores using QTLRel.
+  cat(" * Simulating null for ",length(markers)," markers on chromosome ",
+      chr,".\n",sep="")
+      
+  # Permute the phenotypes relative to genotype data under the
+  # null distribution, accounting for varying levels of genetic
+  # sharing among individuals in the sample.
+  intercept <- rep(1,n)
+  covars    <- cbind(intercept,pheno[,covariates])
+  y         <- mvnpermute(pheno[,phenotype],covars,vc,num.perm.rel)
+
+  # Estimate the maximum LOD scores under the simulated null
+  # distribution. Repeat for each permutation of the phenotypes.
+  for (i in 1:num.perm.rel) {
+    out <- scanOne(y[,i],pheno[,covariates],geno[,markers],
+                   subset.genoprob(gp,markers),vc,test = "None")
+    lod <- out$p/(2*log(10))
+    perms[chr,i] <- max(lod)
+  }
 }
 
 # Merge the QTLRel mapping results.
 gwscan.rel           <- do.call(rbind,gwscan)
 rownames(gwscan.rel) <- do.call(c,lapply(gwscan,rownames))
+rm(gwscan)
+
+# Get the genome-wide maximum LOD scores.
+perms.rel <- apply(perms,2,max)
+
+stop()
+
+rm(perms)
 
 # PLOT GENOME-WIDE SCAN FROM qtl AND QTLRel
 # -----------------------------------------
@@ -220,6 +254,10 @@ plot(gwscan.qtl,incl.markers = FALSE,lwd = 4,bandcol = "powderblue",
 plot(gwscan.rel,incl.markers = FALSE,lwd = 2,bandcol = "powderblue",
      col = "darkblue",gap = 0,add = TRUE)
 
-# Add the significance threshold to the plot.
+# Add the significance threshold from qtl to the plot.
 add.threshold(gwscan.qtl,perms = perms.qtl,alpha = threshold,gap = 0,
               col = "darkorange",lty = "dotted")
+
+# Add the significance threshold from QTLRel to the plot.
+add.threshold(gwscan.qtl,perms = perms.rel,alpha = threshold,gap = 0,
+              col = "black",lty = "dotted")
