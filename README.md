@@ -67,7 +67,33 @@ we progress.
 
 ###Getting started
 
-Instructions for getting started go here.
+You will need to complete these steps to work on the exercises for
+this module.
+
+First, make sure you have a recent version of
+[R](http://www.r-project.org) running on your computer.
+
+Next, you will need to download and install R packages
+[qtl](http://github.com/kbroman/qtl) and
+[QTLRel](http://github.com/pcarbo/QTLRel) using the
+**install.packages** function in R, if you don't already have these
+packages installed on your computer.
+
+We will also make use of the [varbvs](http://github.com/pcarbo/varbvs)
+package. While you can also install this package using
+**install.packages**, I recommend getting the most up-to-date version
+from github. Follow the "Quick start for R" instructions to install
+this package by downloading the source code from github.
+
+Finally, you will need to download the source code for this
+module. The simplest way to do this is to
+[download this repository as a ZIP archive](http://github.com/pcarbo/kyoto/archive/master.zip).
+Alternatively, if you have a github account, you can
+[fork](http://help.github.com/articles/fork-a-repo) the repository,
+and clone it on your local machine.
+
+Once you have completed these steps, you are ready to move on to the
+exercises below.
 
 ###Overview of data files
 
