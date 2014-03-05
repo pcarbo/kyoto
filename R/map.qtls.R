@@ -179,7 +179,7 @@ plot(gwscan.qtl,incl.markers = FALSE,lwd = 4,bandcol = "powderblue",
      col = "dodgerblue",ylim = c(0,ymax),gap = 0,xlab = "",ylab = "LOD",
      main = paste0(phenotype,", ",generation," cross"))
 
-# Plot the QTL mapping results from QTLRel using the F2 cross.
+# Plot the QTL mapping results from QTLRel.
 plot(gwscan.rel,incl.markers = FALSE,lwd = 2,bandcol = "powderblue",
      col = "darkblue",ylim = c(0,ymax),gap = 0,add = TRUE)
 
