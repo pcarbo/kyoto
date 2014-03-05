@@ -49,6 +49,12 @@ none.missing.row <- function (d)
   rowSums(is.na(d)) == 0
 
 # ----------------------------------------------------------------------
+# Return a vector containing the upper triangular entries of A, or the
+# off-diagonal entries of symmetric matrix A.
+offdiag <- function (A)
+  return(A[upper.tri(A)])
+
+# ----------------------------------------------------------------------
 # Returns the matrix product A*A'.
 matrix.square <- function (A)
   return(A %*% t(A))
