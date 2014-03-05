@@ -1,8 +1,8 @@
 # This script maps QTLs across the genome in a single filial
 # generation of an advanced intercross line (AIL). We quantify support
 # for a QTL at each of the genotyped SNPs. We use two different
-# methods to assess support for an association between genotype and
-# phenotype:
+# "single-marker" methods to assess support for an association between
+# genotype and phenotype:
 #
 #   "scanone" from the qtl library, which does not account for varying
 #   amounts of genetic sharing;

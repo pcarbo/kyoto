@@ -46,9 +46,9 @@ directly whether alleles from a given pair of individuals are
 identical-by-descent (IBD), while in general (e.g. in human studies)
 we cannot make such an inference.
 
-![Transmission of alleles in an F2 intercross.](figures/intercross.gif)
-**Transmission of alleles in an F2 intercross.** From *Broman and Sen,
-A Guide to QTL Mapping with R/qtl, 2009.*
+![Transmission of alleles in F2 cross.](figures/intercross.gif)
+**Illustration of the transmission of alleles in an F2 intercross.**
+From *Broman and Sen, A Guide to QTL Mapping with R/qtl, 2009.*
 
 In a traditional intercross, two inbred strains are crossed to obtain
 the first generation (F1) of mice.  In our case, the inbred founders
@@ -68,6 +68,9 @@ data from F2 mice, and in mice from the 34th generation cross. While
 understanding the features of advanced intercross lines is not the
 central objective of this module, it will be useful to observe them as
 we progress.
+
+*Talk briefly about the fear conditioning phenotypes, and the coat
+coat traits.*
 
 ###Getting started
 
@@ -90,8 +93,8 @@ from github. Follow the "Quick start for R" instructions to install
 this package by downloading the source code from github.
 
 Finally, you will need to download the source code for this
-module. The simplest way to do this is to
-[download this repository as a ZIP archive](http://github.com/pcarbo/kyoto/archive/master.zip).
+module. The simplest way to do this is to [download this repository
+as a ZIP archive](http://github.com/pcarbo/kyoto/archive/master.zip).
 Alternatively, if you have a github account, you can
 [fork](http://help.github.com/articles/fork-a-repo) the repository,
 and clone it on your local machine.
@@ -118,6 +121,29 @@ genetic distances and chromosomal positions (in bases).
 
 Here is a brief summary of the files in the [R](R) directory:
 
-+ [read.data.R](code/read.data.R) Defines several functions for
++ [read.data.R](R/read.data.R) Defines several functions for
 reading experimental cross data from files in comma-delimited ("csv")
 format.
+
++ [data.manip.R](R/data.manip.R) Functions for manipulating the
+experimental cross data, and for converting the data into the
+various formats used by R/qtl and QTLRel.
+
++ [mapping.tools.R](R/mapping.tools.R) Functions for analyzing the
+QTL experiment data, and for computing marker-based estimates of
+pairwise relatedness.
+
++ [mvnpermute.R](R/mvnpermute.R) Function written by Mark Abney to
+execute a permutation-based test with multivariate normally
+distributed data.
+
++ [misc.R](R/misc.R) Various R functions that do not fit in the other
+files.
+
++ [map.qtls.R](R/map.qtls.R) This script maps QTLs across the genome
+in a single filial generation of an advanced intercross line (AIL),
+using two different "single-marker" methods: one that ignores unequal
+relatedness in the mouse population (from the R/qtl library), and
+another that attempts to correct for this (from the QTLRel library).
+
++ [multi.map.qtls.R](R/multi.map.qtls.R) Description goes here.
