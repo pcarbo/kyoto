@@ -30,7 +30,7 @@
 phenotype    <- "freezetocue" # Map QTLs for this phenotype.
 generation   <- "F2"          # Map QTLs in mice from this generation.
 num.perm.qtl <- 100           # Replicates for qtl permutation test.
-num.perm.rel <- 100           # Replicates for QTLRel permutation test.
+num.perm.rel <- 10            # Replicates for QTLRel permutation test.
 threshold    <- 0.05          # Significance threshold ("alpha").
 
 # Use these covariates in the QTL mapping.
@@ -159,6 +159,7 @@ chromosomes     <- levels(map$chr)
 gwscan          <- list()
 perms           <- matrix(nrow = length(chromosomes),ncol = num.perm.rel)
 rownames(perms) <- chromosomes
+vcparams        <- NULL
 
 # Map QTLs separately for each chromosome.
 for (chr in chromosomes) {
@@ -203,7 +204,8 @@ for (chr in chromosomes) {
   }
   gwscan[[chr]]     <- empty.scanone(map[markers,])
   gwscan[[chr]]$lod <- out$p/(2*log(10))
-
+  vcparams          <- rbind(vcparams,r$par)
+                             
   # Generate permutations to estimate the null
   # distribution of the maximum LOD scores using QTLRel.
   cat(" * Simulating null for ",length(markers)," markers on chromosome ",
@@ -219,8 +221,14 @@ for (chr in chromosomes) {
   # Estimate the maximum LOD scores under the simulated null
   # distribution. Repeat for each permutation of the phenotypes.
   for (i in 1:num.perm.rel) {
-    out <- scanOne(y[,i],pheno[,covariates],geno[,markers],
-                   subset.genoprob(gp,markers),vc,test = "None")
+    if (is.null(covariates)) {
+      out <- scanOne(y[,i],gdat = geno[markers],
+                     prdat = subset.genoprob(gp,markers),
+                     vc = vc,test = "None")
+    } else {
+      out <- scanOne(y[,i],pheno[covariates],geno[markers],
+                     subset.genoprob(gp,markers),vc,test = "None")
+    }
     lod <- out$p/(2*log(10))
     perms[chr,i] <- max(lod)
   }
@@ -229,14 +237,11 @@ for (chr in chromosomes) {
 # Merge the QTLRel mapping results.
 gwscan.rel           <- do.call(rbind,gwscan)
 rownames(gwscan.rel) <- do.call(c,lapply(gwscan,rownames))
-rm(gwscan)
+rownames(vcparams)   <- chromosomes
 
 # Get the genome-wide maximum LOD scores.
-perms.rel <- apply(perms,2,max)
-
-stop()
-
-rm(perms)
+perms.rel    <- perms.qtl
+perms.rel[,] <- apply(perms,2,max)
 
 # PLOT GENOME-WIDE SCAN FROM qtl AND QTLRel
 # -----------------------------------------
@@ -256,7 +261,7 @@ plot(gwscan.rel,incl.markers = FALSE,lwd = 2,bandcol = "powderblue",
 
 # Add the significance threshold from qtl to the plot.
 add.threshold(gwscan.qtl,perms = perms.qtl,alpha = threshold,gap = 0,
-              col = "darkorange",lty = "dotted")
+              col = "orangered",lty = "dotted")
 
 # Add the significance threshold from QTLRel to the plot.
 add.threshold(gwscan.qtl,perms = perms.rel,alpha = threshold,gap = 0,

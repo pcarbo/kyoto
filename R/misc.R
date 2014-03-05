@@ -58,3 +58,23 @@ offdiag <- function (A)
 # Returns the matrix product A*A'.
 matrix.square <- function (A)
   return(A %*% t(A))
+
+# ----------------------------------------------------------------------
+# Does the same thing as repmat(A,m,n) in MATLAB.
+repmat <- function (A,m,n) {
+  if (!is.matrix(A))
+    stop("Invalid 'A' argument")
+  return(kronecker(matrix(1,m,n),A))
+}
+
+# ----------------------------------------------------------------------
+# Centers the columns of matrix X so that the entries in each column
+# of X add up to zero.
+center.columns <- function (X) {
+  if (!is.matrix(X))
+    stop("Invalid 'X' argument")
+  mu <- matrix(colMeans(X),1,ncol(X))
+  X  <- X - repmat(mu,nrow(X),1)
+  return(X)
+}
+
