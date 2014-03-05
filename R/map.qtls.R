@@ -49,13 +49,13 @@ source("mapping.tools.R")
 
 # LOAD DATA
 # ---------
-# Load the phenotype, phenotype and marker data for all the samples.
+# Load the phenotype, phenotype and marker data from csv files.
 cat("Loading phenotype, genotype and marker data.\n");
 pheno <- read.pheno("../data/pheno.csv")
 map   <- read.map("../data/map.csv")
 geno  <- read.geno("../data/geno.csv")
 
-# Drop the X chromosome from the analysis.
+# We drop the X chromosome from the analysis.
 markers <- which(map$chr != "X")
 map     <- transform(map[markers,],chr = droplevels(chr))
 geno    <- geno[markers]
@@ -67,13 +67,13 @@ rows  <- which(pheno$generation == generation)
 pheno <- pheno[rows,]
 geno  <- geno[rows,]
 
-# Get the markers genotyped in these mice.
+# Get the markers that are genotyped in these mice.
 markers <- which(!all.missing.col(geno))
 map     <- map[markers,]
 geno    <- geno[markers]
 
-# Keep only samples for which we have all observations for the
-# phenotype and covariates.
+# Keep only samples for which we observe all the phenotype and
+# covariates included in our analysis.
 cols  <- c(phenotype,covariates)
 rows  <- which(none.missing.row(pheno[cols]))
 pheno <- pheno[rows,]
@@ -93,7 +93,7 @@ gp <- genoProb(zero.na(genotypes2counts(geno)),map,step = Inf,
 # ANALYSIS USING QTL
 # ------------------
 # Map QTLs using a simple linear regression approach that does not
-# correct for possible confounding to due relatedness.
+# attempt to correct for possible confounding to due relatedness.
 cat("Mapping QTLs for",phenotype,"in",nrow(pheno),"mice at",nrow(map),
     "candidate SNPs,\n")
 if (length(covariates) > 0) {
@@ -105,8 +105,8 @@ cat("Mapping QTLs using qtl.\n")
 
 # Convert the experimental cross data to the format used by qtl, then
 # run the genome-wide scan using the qtl function "scanone".
-cross    <- rel2qtl(pheno,geno,map)
-cross    <- rel2qtl.genoprob(cross,gp)
+cross <- rel2qtl(pheno,geno,map)
+cross <- rel2qtl.genoprob(cross,gp)
 cov.data <- NULL
 if (!is.null(covariates))
   cov.data <- cross$pheno[covariates]
@@ -125,12 +125,12 @@ suppressWarnings(
 # --------------------------------------
 # Compute the (expected) relatedness matrix using all available markers.
 R <- rr.matrix(gp);
-trellis.device(width = 4,height = 2,title = "Relatedness estimates")
-trellis.par.set(list(fontsize = list(text = 9),
-                     par.main.text = list(cex = 1)))
 
 # Plot the distribution of the marker-based estimates of pairwise
 # relatedness when the pairs correspond to the same individual.
+trellis.device(width = 4,height = 2,title = "Relatedness estimates")
+trellis.par.set(list(fontsize = list(text = 9),
+                     par.main.text = list(cex = 1)))
 print(histogram(diag(R),breaks = seq(1.2,1.8,0.025),col = "darkorange",
                 border = "darkorange",xlab = "relatedess coef.",
                 ylab = "% of entries",main = "diagonal entries",
@@ -208,11 +208,12 @@ rownames(gwscan.rel) <- do.call(c,lapply(gwscan,rownames))
 # -----------------------------------------
 trellis.device(width = 7,height = 1.75,title = "QTL mapping results")
 par(ps = 9,font.lab = 1,font.main = 1,cex.main = 1,
-    mai = c(0.5,0.5,0.25,0.25),tck = -0.1)
+    mai = c(0.5,0.8,0.25,0.25),tck = -0.1)
 
 # Plot the QTL mapping results from qtl.
 plot(gwscan.qtl,incl.markers = FALSE,lwd = 4,bandcol = "powderblue",
-     col = "dodgerblue",gap = 0,xlab = "",ylab = "LOD",
+     col = "dodgerblue",gap = 0,xlab = "chromosome",ylab = "LOD",
+     ylim = c(0,ceiling(max(c(gwscan.qtl$lod,gwscan.rel$lod)))),
      main = paste0(phenotype,", ",generation," cross"))
 
 # Plot the QTL mapping results from QTLRel.
