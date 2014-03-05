@@ -4,21 +4,22 @@
 # methods to assess support for an association between genotype and
 # phenotype:
 #
-#   qtl, which does not account for varying amounts of genetic
-#   sharing;
+#   "scanone" from the qtl library, which does not account for varying
+#   amounts of genetic sharing;
 #
-#   QTLRel, which attempts to account for confounding due to unequal
-#   relatedness by using the marker data to estimate relatedness
-#   between all pairs of mice in the sample.
+#   "scanOne" from the QTLRel library, which attempts to account for
+#   confounding due to unequal relatedness by using the marker data to
+#   estimate relatedness between all pairs of mice in the sample.
 #
 # We also use two different approaches are to assess thresholds for
 # significance:
 #
-#   The first approach applies a permutation-based test to estimate
-#   the null distribution of LOD scores, in which unequal relatedness
-#   of the animals is not taken into account;
+#   The first approach uses "scanone" from the qtl library, applying a
+#   permutation-based test to estimate the null distribution of LOD
+#   scores, in which unequal relatedness of the animals is not taken
+#   into account;
 #
-#   The second approach applies the method described in Abney, Ober
+#   The second approach uses the method described in Abney, Ober
 #   and McPeek (American Journal of Human Genetics, 2002), in which
 #   the phenotype measurements are permuted according to a specified
 #   covariance matrix (which will be calculated using the markers).
@@ -26,14 +27,13 @@
 
 # SCRIPT PARAMETERS
 # -----------------
-phenotype  <- "albino"      # Map QTLs for this phenotype.
+phenotype  <- "freezetocue" # Map QTLs for this phenotype.
 generation <- "F2"          # Map QTLs in mice from this generation.
 num.perm   <- 100           # Number of replicates for permutation test.
 threshold  <- 0.05          # Significance threshold ("alpha").
-ymax       <- 9             # Height of vertical axis.
 
 # Use these covariates in the QTL mapping.
-covariates <- NULL # c("sex","age","albino","agouti")
+covariates <- c("sex","age","albino","agouti")
 
 # Initialize the random number generator.
 set.seed(7)
@@ -58,7 +58,7 @@ geno  <- read.geno("../data/geno.csv")
 # Drop the X chromosome from the analysis.
 markers <- which(map$chr != "X")
 map     <- transform(map[markers,],chr = droplevels(chr))
-geno    <- geno[,markers]
+geno    <- geno[markers]
 
 # GET F2 OR F34 CROSS
 # -------------------
@@ -70,7 +70,7 @@ geno  <- geno[rows,]
 # Get the markers genotyped in these mice.
 markers <- which(!all.missing.col(geno))
 map     <- map[markers,]
-geno    <- geno[,markers]
+geno    <- geno[markers]
 
 # Keep only samples for which we have all observations for the
 # phenotype and covariates.
@@ -161,8 +161,7 @@ for (chr in chromosomes) {
   
   # Get the markers on the chromosome.
   markers <- which(map$chr == chr)
-  cat("  * Mapping ",length(markers)," markers on chromosome ",chr,".\n",
-      sep="")
+  cat(" * Mapping ",length(markers)," markers on chromosome ",chr,".\n",sep="")
 
   # Compute the (expected) relatedness matrix using all markers *except* 
   # the markers on the current chromosome.
@@ -176,7 +175,7 @@ for (chr in chromosomes) {
                v = list(AA = R,DD = NULL,AD = NULL,HH = NULL,
                         MH = NULL,EE = diag(nrow(pheno))))
   } else {
-    r <- estVC(pheno[,phenotype],pheno[,covariates],
+    r <- estVC(pheno[,phenotype],pheno[covariates],
                v = list(AA = R,DD = NULL,AD = NULL,HH = NULL,
                         MH = NULL,EE = diag(nrow(pheno))))
   }
@@ -190,11 +189,11 @@ for (chr in chromosomes) {
   
   # Compute LOD scores for all markers on the chromosome.
   if (is.null(covariates)) {
-    out <- scanOne(pheno[,phenotype],gdat = geno[,markers],
+    out <- scanOne(pheno[,phenotype],gdat = geno[markers],
                    prdat = subset.genoprob(gp,markers),
                    vc = vc,test = "None")
   } else {
-    out <- scanOne(pheno[,phenotype],pheno[,covariates],geno[,markers],
+    out <- scanOne(pheno[,phenotype],pheno[covariates],geno[markers],
                    subset.genoprob(gp,markers),vc,test = "None")
   }
   gwscan[[chr]]     <- empty.scanone(map[markers,])
@@ -205,8 +204,8 @@ for (chr in chromosomes) {
 gwscan.rel           <- do.call(rbind,gwscan)
 rownames(gwscan.rel) <- do.call(c,lapply(gwscan,rownames))
 
-# PLOT RESULTS FROM qtl AND QTLRel
-# --------------------------------
+# PLOT GENOME-WIDE SCAN FROM qtl AND QTLRel
+# -----------------------------------------
 trellis.device(width = 7,height = 1.75,title = "QTL mapping results")
 par(ps = 9,font.lab = 1,font.main = 1,cex.main = 1,
     mai = c(0.5,0.5,0.25,0.25),tck = -0.1)
