@@ -2,7 +2,7 @@
 
 Second Kyoto Course and Symposium on Bioinformatics for
 Next-generation Sequencing with Applications in Human Genetics<br>
-[Center for Genomic Medicine](http://www.genome.med.kyoto-u.ac.jp)<br>
+Center for Genomic Medicine<br>
 Kyoto University<br>
 March 10-12, 2014
 
@@ -101,8 +101,13 @@ projects.
 
 ###Prerequisites
 
-Outline some skills and knowledge here that are necessary in order to
-be able to complete the exercises successfully.
+1. You are reasonably comfortable working with using the R interface,
+executing R scripts, manipulating variables, working with functions,
+and making small changes to scripts.
+
+2. You are familiar, or at least exposed to, the basic notions and
+terminology used to describe mapping QTLs, and the analysis of genetic
+association studies.
 
 ###Getting started
 
@@ -189,36 +194,93 @@ and we can return to the more difficult questions later. For all of
 Part A, we will work with the [map.qtls.R](R/map.qtls.R) script in R.
 
 **Note:** Because some of the computations can take 10-15 minutes to
-complete, I recommend working in teams of 2 or 3 each person can run
-the script with different parameters, and then you can compare the
-results obtained.
+complete, I recommend working in teams of 2-4 so that each person can
+run the script with different parameters, and then you can compare the
+results obtained with your team members.
 
 ####Support for association with and without accounting for a polygenic effect
 
 Here will compare genome-wide scans for a polygenic trait in the F2
 and F34 samples with and without inclusion of the polygenic effect to
-account for population structure. Set the script parameters as follows:
+account for population structure. We will start by assessing support
+for SNPs that explain variance in freezing after exposure to the tone
+on third say of the conditioned fear tests ("freezing to cue"). Set
+the script parameters as follows:
 
     phenotype    <- "freezetocue"
-    generation   <- "F2"
     num.perm.qtl <- 100
     num.perm.rel <- 1
     threshold    <- 0.05
-    covariates <- c("sex","age","albino","agouti")
+    covariates   <- c("sex","age","albino","agouti")
 
 Set **generation = "F2"**, and reexecute the script with **generation
 = "F34"**.
 
-**Note:** To estimate the null distribution of the test statistic, and
-calculate significance thresholds, in these scripts I use a
-permutation-based test, in which the LOD scores are calculated after
-generating a random permutation of the phenotype observations. It is
-recommended that this be done with a large number of replicates (at
-least 1000), but here I use a smaller number (*num.perm.qtl = 100*) so
-that the computations can be completed in a reasonable amount of
-time. Also, I set **num.perm.rel = 1** because this permutation-based
-test is much slower, and you are welcome to investigate the
-permutation-based test using the LMM on your own time.
+We will contrast these results against a Mendelian trait: whether or
+not the mouse is albino. (This is a binary trait, but we can still
+treat it as a continuous variable and attempt to map QTLs for these
+trait using a linear regression. It would be better to use a logistic
+regression.) For this analysis, set **phenotype <- "albino"** and
+**covariates <- NULL**.
+
+The script calculates two set of LOD scores for all available SNPs on
+chromosomes 1-19, and shows them in a single figure. These LOD scores
+are stored in two data frames: **gwscan.qtl**, the output from the qtl
+function scanone (the light blue line in the figure); and
+**gwscan.rel**, the output from the analogous function in QTLRel,
+scanOne (the dark blue line in the figure).
+
+To determine whether or not a LOD score constitutes "significant"
+support for an association between genotype and phenotype, we
+calculated a threshold for significance by estimating the distribution
+of LOD scores under the null hypothesis, and then took the threshold
+to be the 100(1 – alpha)th percentile of this distribution, with alpha
+= 0.05. It is recommended that this be done with a large number of
+replicates (at least 1000) to ensure that the threshold is fairly
+stable, but here I use a smaller number (*num.perm.qtl = 100*) so that
+the computations can be completed in a reasonable amount of time. This
+threshold is shown by the dotted red line in the figure.
+
+**Note:** This procedure fails to account for differences in genetic
+sharing among the AIL mice. I also have implemented a test that
+accounts for the covariate structure of the polygenic effect. However,
+this permutation-based test is much slower, so I set **num.perm.rel =
+1**. You are invited to investigate on your own time these two
+different methods for permutation-based tests: (1) the method that
+accounts for the covariance structure in the AIL when permuting the
+data; (2) the standard method that assumes all mice are equally
+related.
+
+**Questions**
+
++ Which QTLs would you report as significant with the basic linear
+  regression (qtl), and with the LMM (QTLRel), in the F2 and F34 mice?
+
++ How would you characterize the support for association using the
+basic linear regression, and using the LMM, in the F2 and F34 cohorts?
+
++ How do the two methods behave in the F2 and F34 populations?
+
++ It is also useful to compare the genome-wide scans in the F2 and F34
+generations, because the patterns of linkage disequilibrium are
+different. (The F34 mice have had a much greater opportunity to
+accumulate recombinations.) Based on the results in freezetocue and
+albino, what can you say about the F2 and F34 mice in terms of: (1)
+ability to identify QTLs, (2) ability to pinpoint the gene or genetic
+loci underlying these traits?
+
++ Optional: What locus to you identify for the albino trait, and look
+up the associated SNPs in the
+[UCSC Genome Browser](http://genome.ucsc.edu) (Mouse Genome Assembly
+37) to see whether the region overlaps a known gene for this trait.
+
++ For the LMM analysis, this script fits the LMM to the data
+separately for each chromosome. We can investigate the parameters
+corresponding to the variance components of this model. How do these
+parameter estimates differ among the chromosomes, and can you observe
+any trend? These parameters are stored in the matrix **vcparams**. See
+**help(estVC)** for a brief explanation of what variance componentese
+these numbers correspond to.
 
 ####Realized relatedness
 
@@ -249,14 +311,24 @@ and off-diagonal (i,j) entries of the realized relatedness matrix
 to what we would expect, and what does that tell about
 
 + Compare the relatedness coefficients **R** estimated in the F2 and
-F34 mice. What do these relatedness coefficients tell you about these
-mice?
+F34 mice. What do these relatedness coefficients tell you about
+population structure and inbreeding in the these mice?
 
 + Optional: When we have the probabilities of genotypes AA, AB and BB,
 the what is the formula for the expected number of shared alleles
 between two individuals?
 
-+ Optional: generate matrix in a different way.
++ Optional: In human studies, people typically use a different
+realized relatedness matrix. Instead of calculating kinship
+coefficients based on the genotypes, they calculate the realized
+matrix as **R = X % * % t(X)**, where **X** is the n x p genotype
+matrix, where n is the number of samples, and p is the number of
+markers; that is, the matrix populated with the allele counts (0, 1 or
+2), or the mean allele counts if there is some uncertainty in the
+genotypes. In my lecture, I claimed that this matrix would yield
+identical results. Implement this in the script, and demonstrate
+empirically that this relatedness matrix yields the same LOD scores at
+all SNPs.
 
 ###Exit slip
 

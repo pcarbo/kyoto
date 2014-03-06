@@ -27,14 +27,14 @@
 
 # SCRIPT PARAMETERS
 # -----------------
-phenotype    <- "freezetocue" # Map QTLs for this phenotype.
-generation   <- "F2"          # Map QTLs in mice from this generation.
+phenotype    <- "albino"      # Map QTLs for this phenotype.
+generation   <- "F34"         # Map QTLs in mice from this generation.
 num.perm.qtl <- 100           # Replicates for qtl permutation test.
 num.perm.rel <- 1             # Replicates for QTLRel permutation test.
 threshold    <- 0.05          # Significance threshold ("alpha").
 
 # Use these covariates in the QTL mapping.
-covariates <- c("sex","age","albino","agouti")
+covariates <- NULL
 
 # Initialize the random number generator.
 set.seed(7)
@@ -83,10 +83,10 @@ geno  <- geno[rows,]
 
 # COMPUTE GENOTYPE PROBABILITIES
 # ------------------------------
-# Compute the conditional genotype probabilities using QTLRel. To
-# accomplish this, we need to replace the genotypes with allele counts
-# (AA, AB, BB become 1, 2, 3, respectively), and we replace any 
-# missing values with zeros.
+# Compute the conditional genotype probabilities of the missing
+# genotypes using QTLRel. To accomplish this, we need to replace the
+# genotypes with allele counts (AA, AB, BB become 1, 2, 3,
+# respectively), and we replace any missing values with zeros.
 cat("Calculating probabilities of missing genotypes.\n")
 gp <- genoProb(zero.na(genotypes2counts(geno)),map,step = Inf,
                gr = as.integer(substr(generation,2,3)),
