@@ -95,7 +95,14 @@ Mendelian traits.
 
 ###Objectives
 
-Outline objectives here.
+1. Get some exposure to [github](http://github.com), an excellent
+resource for sharing data and source code, and collaborating on
+projects.
+
+###Prerequisites
+
+Outline some skills and knowledge here that are necessary in order to
+be able to complete the exercises successfully.
 
 ###Getting started
 
@@ -176,7 +183,80 @@ another that attempts to correct for this (from the QTLRel library).
 ###Part A
 
 In Part A of this module, we investigate the linear mixed model for
-mapping QTLs in the advanced intercross.
+mapping QTLs in the advanced intercross. I've made some of the more
+involved questions optional so that we have time to move on to Part B,
+and we can return to the more difficult questions later. For all of
+Part A, we will work with the [map.qtls.R](R/map.qtls.R) script in R.
+
+**Note:** Because some of the computations can take 10-15 minutes to
+complete, I recommend working in teams of 2 or 3 each person can run
+the script with different parameters, and then you can compare the
+results obtained.
+
+####Support for association with and without accounting for a polygenic effect
+
+Here will compare genome-wide scans for a polygenic trait in the F2
+and F34 samples with and without inclusion of the polygenic effect to
+account for population structure. Set the script parameters as follows:
+
+    phenotype    <- "freezetocue"
+    generation   <- "F2"
+    num.perm.qtl <- 100
+    num.perm.rel <- 1
+    threshold    <- 0.05
+    covariates <- c("sex","age","albino","agouti")
+
+Set **generation = "F2"**, and reexecute the script with **generation
+= "F34"**.
+
+**Note:** To estimate the null distribution of the test statistic, and
+calculate significance thresholds, in these scripts I use a
+permutation-based test, in which the LOD scores are calculated after
+generating a random permutation of the phenotype observations. It is
+recommended that this be done with a large number of replicates (at
+least 1000), but here I use a smaller number (*num.perm.qtl = 100*) so
+that the computations can be completed in a reasonable amount of
+time. Also, I set **num.perm.rel = 1** because this permutation-based
+test is much slower, and you are welcome to investigate the
+permutation-based test using the LMM on your own time.
+
+####Realized relatedness
+
+Working with the marker-based estimates of genetic sharing, or
+relatedness, gives us an opportunity to examine these estimates more
+closely. Using the function **rr.matrix** returns an n-by-n matrix,
+where n is the number of samples. This matrix is **R** in the script.
+Each entry of this matrix is simply the number of alleles that share
+the same state, averaged over all SNPs. For a given SNP, this is 0 if
+the genotypes of individuals i and j are homozygous and different; 2
+if both genotypes are homozygous and the same; and 1 in all other
+cases. (Note that, in an AIL, this is equivalent to the number of
+alleles that are IBD since all alleles originate from two inbred
+founders.) To account for uncertainty in the genotype estimates
+whenever the genotypes are missing, we used the following formula for
+the expected number of shared alleles.
+
+**Questions**
+
++ The entries of the realized relatedness matrix are also the kinship
+coefficients times 2. The identity coefficients for (i,i) F2 pairs are
+d1 = 1/2, d7 = 1/2, and for (i,j) F2 pairs they are d = (1/8, 1/8,
+1/4, 0, 1/4, 0, 1/4, 0, 0), and the kinship coefficients are 3/4 and
+1/2 for the diagonal and off-diagonal entries of the F2 kinship
+matrix, respectively). Looking at the histograms of the diagonal (i,i)
+and off-diagonal (i,j) entries of the realized relatedness matrix
+**R**, how do the marker-based estimates in the F2 generation compare
+to what we would expect, and what does that tell about
+
++ Compare the relatedness coefficients **R** estimated in the F2 and
+F34 mice. What do these relatedness coefficients tell you about these
+mice?
+
++ Optional: When we have the probabilities of genotypes AA, AB and BB,
+the what is the formula for the expected number of shared alleles
+between two individuals?
+
++ Optional: generate matrix in a different way.
 
 ###Exit slip
 

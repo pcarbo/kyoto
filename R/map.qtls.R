@@ -30,7 +30,7 @@
 phenotype    <- "freezetocue" # Map QTLs for this phenotype.
 generation   <- "F2"          # Map QTLs in mice from this generation.
 num.perm.qtl <- 100           # Replicates for qtl permutation test.
-num.perm.rel <- 10            # Replicates for QTLRel permutation test.
+num.perm.rel <- 1             # Replicates for QTLRel permutation test.
 threshold    <- 0.05          # Significance threshold ("alpha").
 
 # Use these covariates in the QTL mapping.
@@ -142,12 +142,12 @@ print(histogram(diag(R),breaks = seq(1.2,1.8,0.025),col = "darkorange",
 
 # Plot the distribution of the marker-based estimates of pairwise
 # relatedness when the pairs correspond to different individuals.
-print(histogram(offdiag(R),breaks = seq(0.6,1.4,0.025),col = "dodgerblue",
+print(histogram(offdiag(R),breaks = seq(0.5,1.5,0.025),col = "dodgerblue",
                 border = "dodgerblue",xlab = "relatedness coef.",
                 ylab = "% of entries",main = "off-diagonal entries",
-                scales = list(tck = 0.75,x = list(at = seq(0.6,1.4,0.2)))),
+                scales = list(tck = 0.75,x = list(at = seq(0.5,1.5,0.25)))),
       split = c(2,1,2,1))
-      
+
 # ANALYSIS USING QTLRel
 # ---------------------
 # Map QTLs for all markers on a single chromosome using 'scanOne' from
@@ -264,5 +264,6 @@ add.threshold(gwscan.qtl,perms = perms.qtl,alpha = threshold,gap = 0,
               col = "orangered",lty = "dotted")
 
 # Add the significance threshold from QTLRel to the plot.
-add.threshold(gwscan.qtl,perms = perms.rel,alpha = threshold,gap = 0,
-              col = "black",lty = "dotted")
+if (num.perm.rel >= 100)
+  add.threshold(gwscan.qtl,perms = perms.rel,alpha = threshold,gap = 0,
+                col = "black",lty = "dotted")
