@@ -28,7 +28,7 @@
 # SCRIPT PARAMETERS
 # -----------------
 phenotype    <- "freezetocue" # Map QTLs for this phenotype.
-generation   <- "F2"          # Map QTLs in mice from this generation.
+generation   <- "F34"         # Map QTLs in mice from this generation.
 num.perm.qtl <- 100           # Replicates for qtl permutation test.
 num.perm.rel <- 1             # Replicates for QTLRel permutation test.
 threshold    <- 0.05          # Significance threshold ("alpha").
