@@ -32,19 +32,26 @@ mapping methods have been used to map the genetic loci that contribute
 to risk of complex diseases, here we will investigate these methods
 for mapping quantitative trait loci (QTLs) in mice, and specifically
 advanced intercrosses of inbred mouse laboratory strains. We will try
-to get a better appreciation for the features of these approaches, and
-when they might be useful, and how to interpret the results of the
-analyses.
+to develop a better appreciation for the features of these approaches,
+when and why these approaches might be useful, and how to interpret
+the results of the analyses.
+
+What we will **not** do in this module is explore the mathematics of
+these methods, at least not in detail. Understanding the mathematical
+fundamentals of these methods is certainly important, but here we are
+exploring the features of these methods **by example**.
 
 An advanced intercross population has several features that make it
 well-suited for exploring data analysis methods for genetic
 association studies. These features include: (1) the patterns of
 linkage disequilibrium are fairly predictable; (2) all observed
-alleles are common; and (3) in all cases we can trace an allele to one
-of the two inbred founders. As a result, the genetic markers tell us
-directly whether alleles from a given pair of individuals are
-identical-by-descent (IBD), while in general (e.g. in human studies)
-we cannot make such an inference.
+alleles are common; (3) environmental conditions are expected to play
+a smaller role given that the environment is well-controlled; and (4)
+perhaps most significantly for the purposes of this module, in all
+cases we can trace an allele to one of the two inbred founders. As a
+result, the genetic markers tell us directly whether alleles from a
+given pair of individuals are identical-by-descent (IBD), while in
+general (e.g. in human studies) we cannot make such an inference.
 
 ![Transmission of alleles in F2 cross.](figures/intercross.gif)
 **Illustration of the transmission of alleles in an F2 intercross.**
@@ -52,12 +59,13 @@ From *Broman and Sen, A Guide to QTL Mapping with R/qtl, 2009.*
 
 In a traditional intercross, two inbred strains are crossed to obtain
 the first generation (F1) of mice.  In our case, the inbred founders
-are the LG/J and SM/J inbred strains obtained from The Jackson
-Laboratories, two very widely used inbred strains in mouse
-genetics. Since the mother and father have identical chromosomes, each
-F1 animal is genetically identical (see the figure). Therefore, if we
-denote the LG/J and SM/J inbred strains by A and B, all the F1 mice
-have genotype AB on autosomal chromosomes.
+are the [LG/J](http://jaxmice.jax.org/strain/000675.html) and
+[SM/J](http://jaxmice.jax.org/strain/000687.html) inbred strains
+obtained from The Jackson Laboratories, two very widely used inbred
+strains in mouse genetics. Since the mother and father have identical
+chromosomes, each F1 animal is genetically identical (see the
+figure). Therefore, if we denote the LG/J and SM/J inbred strains by A
+and B, all the F1 mice have genotype AB on autosomal chromosomes.
 
 The next generation (F2) is obtained by randomly crossing the F1 mice,
 so there three possible genotypes appear in the F2 mice, AA, AB and
@@ -69,8 +77,25 @@ understanding the features of advanced intercross lines is not the
 central objective of this module, it will be useful to observe them as
 we progress.
 
-*Talk briefly about the fear conditioning phenotypes, and the coat
-coat traits.*
+The traits we will map in this study are those measured as part of
+conditioned fear tests, which is intended to assess anxiety-related
+behaviour. The amount of "freezing" is measured in three separate days
+after exposure to paired tones (the conditioned stimulus) and shocks
+(the unconditioned stimulus). The larger goal here to advance our
+understanding of the genes underlying anxiety disorders. The fear
+conditioning traits are expected to have a highly complex genetic
+basis, and any individual loci are expected to explain only a small
+proportion of the variance in these traits.
+
+We have also recorded coat colour, which is a major confounder for
+these tests, because the albino mice are not tracked as well with the
+video equipment. (LG/J mice are albino, and SM/J mice are agouti.)
+This also provides an opportunity to attempt to map the loci for these
+Mendelian traits.
+
+###Objectives
+
+Outline objectives here.
 
 ###Getting started
 
@@ -147,3 +172,13 @@ relatedness in the mouse population (from the R/qtl library), and
 another that attempts to correct for this (from the QTLRel library).
 
 + [multi.map.qtls.R](R/multi.map.qtls.R) Description goes here.
+
+###Part A
+
+In Part A of this module, we investigate the linear mixed model for
+mapping QTLs in the advanced intercross.
+
+###Exit slip
+
+They will return this back to me so that I can get feedback about the
+module.
