@@ -25,33 +25,32 @@ This program is distributed in the hope that it will be useful, but
 
 ###Introduction
 
-The goal of this module is to explore the use of linear mixed models
-(LMMs) and multi-marker models to identify regions of the genome that
-are correlated with quantitative traits. While LMMs and multi-marker
-mapping methods have been used to map the genetic loci that contribute
-to risk of complex diseases, here we will investigate these methods
-for mapping quantitative trait loci (QTLs) in mice, and specifically
-advanced intercrosses of inbred mouse laboratory strains. We will try
-to develop a better appreciation for the features of these approaches,
-when and why these approaches might be useful, and how to interpret
-the results of the analyses.
+The goal of this module is to explore linear mixed models (LMMs) and
+multi-marker models for identifying genetic variants correlated with a
+quantitative trait. LMMs and multi-marker mapping methods have been
+used to map the genetic loci that contribute to risk of complex human
+diseases, but here we will illustrate these methods for mapping
+quantitative trait loci (QTLs) in mice instead. Specifically, we will
+be working with data from advanced intercrosses of (inbred) lab
+strains. In this module, our goal is to develop a better appreciation
+for the features of LMMs and multi-marker methods;when and why these
+approaches might be useful; and how to interpret the results.
 
-What we will **not** do in this module is explore the mathematics of
-these methods, at least not in detail. Understanding the mathematical
-fundamentals of these methods is certainly important, but here we are
-exploring the features of these methods **by example**.
+The focus is on cultivating a better understanding of these methods
+by example; we will not explore the mathematical foundations of
+these methods, at least not in detail.
 
 An advanced intercross population has several features that make it
-well-suited for exploring data analysis methods for genetic
-association studies. These features include: (1) the patterns of
-linkage disequilibrium are fairly predictable; (2) all observed
-alleles are common; (3) environmental conditions are expected to play
-a smaller role given that the environment is well-controlled; and (4)
-perhaps most significantly for the purposes of this module, in all
-cases we can trace an allele to one of the two inbred founders. As a
-result, the genetic markers tell us directly whether alleles from a
-given pair of individuals are identical-by-descent (IBD), while in
-general (e.g. in human studies) we cannot make such an inference.
+well-suited for exploring data analysis procedures for genetic
+association studies: (1) the patterns of linkage disequilibrium are
+more predictable; (2) all observed alleles are common; (3)
+environmental conditions are expected to play a smaller role given
+that the environment is well-controlled; and (4) perhaps most
+significantly for the purposes of this module, in all cases we can
+trace an allele to one of the two inbred founders. As a result, the
+genetic markers tell us directly whether alleles from a given pair of
+individuals are identical-by-descent (IBD), while in general (e.g. in
+human studies) we cannot make such an inference.
 
 ![Transmission of alleles in F2 cross.](figures/intercross.gif)
 **Illustration of the transmission of alleles in an F2 intercross.**
