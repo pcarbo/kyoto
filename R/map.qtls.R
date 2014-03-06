@@ -1,36 +1,38 @@
-# This script maps QTLs across the genome in a single filial
-# generation of an advanced intercross line (AIL). We quantify support
-# for a QTL at each of the genotyped SNPs. We use two different
-# "single-marker" methods to assess support for an association between
-# genotype and phenotype:
+# In this script, we map QTLs across the genome in mice from a single
+# generation of an advanced intercross line (AIL); that is, we
+# quantify support for a QTL at each of the genotyped SNPs. We use two
+# different "single-marker" methods to assess support for associations:
 #
-#   "scanone" from the qtl library, which does not account for varying
-#   amounts of genetic sharing;
+#   The first method is "scanone" from the qtl library, which does not
+#   account for varying amounts of genetic sharing.
 #
-#   "scanOne" from the QTLRel library, which attempts to account for
-#   confounding due to unequal relatedness by using the marker data to
-#   estimate relatedness between all pairs of mice in the sample.
+#   The second method is "scanOne" from the QTLRel library, which
+#   attempts to account for confounding due to unequal relatedness. It
+#   uses the marker data to estimate relatedness between all pairs of
+#   mice.
 #
 # We also use two different approaches are to assess thresholds for
 # significance:
 #
-#   The first approach uses "scanone" from the qtl library, applying a
-#   permutation-based test to estimate the null distribution of LOD
-#   scores, in which unequal relatedness of the animals is not taken
-#   into account;
+#   The first approach uses "scanone" from the qtl library. It applies
+#   a permutation-based test to estimate the null distribution of LOD
+#   scores, in which unequal relatedness of the animals is *not* taken
+#   into account.
 #
-#   The second approach uses the method described in Abney, Ober
+#   The second approach uses the algorithm described in Abney, Ober
 #   and McPeek (American Journal of Human Genetics, 2002), in which
 #   the phenotype measurements are permuted according to a specified
 #   covariance matrix (which will be calculated using the markers).
+#   Note that this method dramatically increases the computational
+#   cost of the permutation-based test.
 #
 
 # SCRIPT PARAMETERS
 # -----------------
 phenotype    <- "freezetocue" # Map QTLs for this phenotype.
-generation   <- "F34"         # Map QTLs in mice from this generation.
-num.perm.qtl <- 100           # Replicates for qtl permutation test.
-num.perm.rel <- 1             # Replicates for QTLRel permutation test.
+generation   <- "F2"          # Use this generation of mice (F2 or F34).
+num.perm.qtl <- 100           # Number of replicates for qtl permutation test.
+num.perm.rel <- 1             # Num. replicates for QTLRel permutation test.
 threshold    <- 0.05          # Significance threshold ("alpha").
 
 # Use these covariates in the QTL mapping.
@@ -57,7 +59,7 @@ pheno <- read.pheno("../data/pheno.csv")
 map   <- read.map("../data/map.csv")
 geno  <- read.geno("../data/geno.csv")
 
-# We drop the X chromosome from the analysis.
+# Drop the X chromosome from the analysis.
 markers <- which(map$chr != "X")
 map     <- transform(map[markers,],chr = droplevels(chr))
 geno    <- geno[markers]
@@ -74,8 +76,8 @@ markers <- which(!all.missing.col(geno))
 map     <- map[markers,]
 geno    <- geno[markers]
 
-# Keep only samples for which we observe all the phenotype and
-# covariates included in our analysis.
+# Keep only samples for which we observe the phenotype and all the
+# covariates.
 cols  <- c(phenotype,covariates)
 rows  <- which(none.missing.row(pheno[cols]))
 pheno <- pheno[rows,]
@@ -84,9 +86,9 @@ geno  <- geno[rows,]
 # COMPUTE GENOTYPE PROBABILITIES
 # ------------------------------
 # Compute the conditional genotype probabilities of the missing
-# genotypes using QTLRel. To accomplish this, we need to replace the
-# genotypes with allele counts (AA, AB, BB become 1, 2, 3,
-# respectively), and we replace any missing values with zeros.
+# genotypes. To accomplish this, we need to replace the genotypes with
+# allele counts (AA, AB, BB become 1, 2, 3, respectively), and we
+# replace any missing values with zeros.
 cat("Calculating probabilities of missing genotypes.\n")
 gp <- genoProb(zero.na(genotypes2counts(geno)),map,step = Inf,
                gr = as.integer(substr(generation,2,3)),
@@ -105,10 +107,11 @@ if (length(covariates) > 0) {
 }
 cat("Mapping QTLs using qtl.\n")
 
-# Convert the experimental cross data to the format used by qtl, then
-# run the genome-wide scan using the qtl function "scanone".
+# Convert the experimental cross data to the format used by qtl.
 cross <- rel2qtl(pheno,geno,map)
 cross <- rel2qtl.genoprob(cross,gp)
+
+# Run the genome-wide scan using the qtl function "scanone".
 cov.data <- NULL
 if (!is.null(covariates))
   cov.data <- cross$pheno[covariates]
@@ -123,8 +126,8 @@ suppressWarnings(
                        model = "normal",method = "em",use = "all.obs",
                        n.perm = num.perm.qtl,verbose = FALSE))
 
-# ESTIMATE GENETIC SHARING USING MARKERS
-# --------------------------------------
+# ESTIMATE GENETIC SHARING USING SNP DATA
+# ---------------------------------------
 # Compute the (expected) relatedness matrix using all available markers.
 R <- rr.matrix(gp);
 
@@ -170,13 +173,7 @@ for (chr in chromosomes) {
 
   # Compute the (expected) relatedness matrix using all markers *except* 
   # the markers on the current chromosome.
-  # R <- rr.matrix(subset.genoprob(gp,which(map$chr != chr)))
-
-  p1 <- gp$pr[,2,]
-  p2 <- gp$pr[,3,]
-  X  <- p1 + 2*p2
-  R  <- matrix.square(X[,which(map$chr != chr)])
-  
+  R <- rr.matrix(subset.genoprob(gp,which(map$chr != chr)))
   dimnames(R) <- list(pheno$id,pheno$id)
 
   # Use the relatedness matrix estimated from the marker data to
@@ -212,19 +209,19 @@ for (chr in chromosomes) {
   gwscan[[chr]]$lod <- out$p/(2*log(10))
   vcparams          <- rbind(vcparams,r$par)
                              
-  # Generate permutations to estimate the null
-  # distribution of the maximum LOD scores using QTLRel.
+  # Generate permutations to estimate the null distribution of the LOD
+  # scores using QTLRel.
   cat(" * Simulating null for ",length(markers)," markers on chromosome ",
       chr,".\n",sep="")
       
-  # Permute the phenotypes relative to genotype data under the
-  # null distribution, accounting for varying levels of genetic
-  # sharing among individuals in the sample.
+  # Permute the phenotypes relative to genotype data, respecting the
+  # covariance structure of the samples to account for varying levels
+  # of genetic sharing among individuals in the sample.
   intercept <- rep(1,n)
   covars    <- cbind(intercept,pheno[,covariates])
   y         <- mvnpermute(pheno[,phenotype],covars,vc,num.perm.rel)
 
-  # Estimate the maximum LOD scores under the simulated null
+  # Get the maximum LOD scores under the simulated null
   # distribution. Repeat for each permutation of the phenotypes.
   for (i in 1:num.perm.rel) {
     if (is.null(covariates)) {
@@ -269,7 +266,8 @@ plot(gwscan.rel,incl.markers = FALSE,lwd = 2,bandcol = "powderblue",
 add.threshold(gwscan.qtl,perms = perms.qtl,alpha = threshold,gap = 0,
               col = "orangered",lty = "dotted")
 
-# Add the significance threshold from QTLRel to the plot.
+# If we have generated enough replicates, add the significance
+# threshold from QTLRel to the plot.
 if (num.perm.rel >= 100)
   add.threshold(gwscan.qtl,perms = perms.rel,alpha = threshold,gap = 0,
                 col = "black",lty = "dotted")
