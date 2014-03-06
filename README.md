@@ -113,13 +113,15 @@ projects.
 
 ###Prerequisites
 
-1. You are reasonably comfortable working with using the R interface,
-executing R scripts, manipulating variables, working with functions,
-and making small changes to scripts.
+1. You are comfortable using the R interface, executing R scripts,
+manipulating variables in R, working with functions in R, and making
+small modifications to R scripts.
 
-2. You are familiar, or at least exposed to, the basic notions and
-terminology used to describe mapping QTLs, and the analysis of genetic
-association studies.
+2. You are familiar, or at least have exposure to, the basic notions
+and standard terminology used to describe the statistical analysis of
+genetic association studies.
+
+3. You are familiar with core concepts in genetics and genetic analysis.
 
 ###Getting started
 
