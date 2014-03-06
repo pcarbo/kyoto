@@ -271,68 +271,71 @@ completed before you have to go home (or return to your hotel
 room). This significance threshold is depicted by the dotted red line
 in the figure.
 
-**Important note:** This permutation procedure fails to account for
-differences in genetic sharing among the AIL mice. I also have
-implemented a test that accounts for the covariate structure of the
-polygenic effect. However, this permutation-based test is much slower,
-so I set **num.perm.rel = 1**. You are invited to investigate on your
-own time these two different methods for permutation-based tests: (1)
-the method that accounts for the covariance structure in the AIL when
-permuting the data; (2) the standard method that assumes all mice are
-equally related.
+**Important note:** This permutation procedure does not account for
+differences in genetic sharing among the AIL mice. I have also
+implemented a permutation-based test that observes the covariance
+structure of the polygenic effect. However, this permutation-based
+test is much slower, so I set **num.perm.rel = 1**. On your own time,
+you are invited to investigate these two different methods for
+estimating the null distribution of LOD scores: (1) the method that
+generates permutations observing the covariance structure of the AIL
+mice; (2) the standard method that assumes all mice are equally
+related.
 
 **Questions**
 
-+ Which QTLs would you report as significant with the basic linear
-  regression (qtl), and with the LMM (QTLRel), in the F2 and F34 mice?
++ Which QTLs are reported as significant when we use the basic linear
+regression (qtl), and when we use the LMM (QTLRel), in the F2 mice,
+and in the F34 mice?
 
-+ How would you characterize the support for association using the
-basic linear regression, and using the LMM, in the F2 and F34 cohorts?
-
-+ How do the two methods behave in the F2 and F34 populations?
++ What trends become apparent in the support for association using the
+basic linear regression compared to using the LMM, in the F2 and F34
+cohorts?
 
 + It is also useful to compare the genome-wide scans in the F2 and F34
-generations, because the patterns of linkage disequilibrium are
+generations, because the patterns of linkage disequilibrium are very
 different. (The F34 mice have had a much greater opportunity to
 accumulate recombinations.) Based on the results in freezetocue and
 albino, what can you say about the F2 and F34 mice in terms of: (1)
-ability to identify QTLs, (2) ability to pinpoint the gene or genetic
-loci underlying these traits?
+ability to identify QTLs, (2) ability to pinpoint the location of the
+genetic polymorphisms underlying these traits? In what way do the two
+mapping methods behave differently in the F2 and F34 populations?
 
-+ Optional: What locus to you identify for the albino trait, and look
-up the associated SNPs in the
-[UCSC Genome Browser](http://genome.ucsc.edu) (Mouse Genome Assembly
-37) to see whether the region overlaps a known gene for this trait.
++ *Optional:* What locus do you identify for the albino trait? Does
+the QTL region overlap a known gene for this trait. Look up the
+associated SNPs in the [UCSC Genome Browser](http://genome.ucsc.edu)
+(Mouse Genome Assembly 37) to investigate this.
 
-+ For the LMM analysis, this script fits the LMM to the data
++ For the LMM data analysis, the script fits the LMM to the data
 separately for each chromosome. We can investigate the parameters
 corresponding to the variance components of this model. How do these
-parameter estimates differ among the chromosomes, and can you observe
-any trend? These parameters are stored in the matrix **vcparams**. See
-**help(estVC)** for a brief explanation of what variance componentese
-these numbers correspond to.
+parameter estimates differ among the chromosomes? Do you observe a
+trend in these estimates based on looking at the association signal on
+these chromosomes? These parameters are stored in the matrix
+**vcparams**. See **help(estVC)** for a brief explanation of what
+variance componentes these numbers correspond to.
 
-+ Optional (though highly recommended!): Investigate "proximal
-contamination" by modifying the script so that **R** is only
-calculated once outside the loop that runs over each chromosome. What
-happens to the genome-wide scan if instead we compute **R** using
-*all* markers? Why does this happen?
++ *Optional* (although highly recommended!): Investigate the idea of
+"proximal contamination" by modifying the script so that the matrix
+**R** is only calculated once using all the markers. What happens to
+the genome-wide scan if instead we compute **R** using *all* markers?
+Why does this happen?
 
-####Realized relatedness
+####Realized relatedness (optional)
 
-Working with the marker-based estimates of genetic sharing, or
-relatedness, gives us an opportunity to examine these estimates more
-closely. Using the function **rr.matrix** returns an n-by-n matrix,
-where n is the number of samples. This matrix is **R** in the script.
-Each entry of this matrix is simply the number of alleles that share
-the same state, averaged over all SNPs. For a given SNP, this is 0 if
-the genotypes of individuals i and j are homozygous and different; 2
-if both genotypes are homozygous and the same; and 1 in all other
+Working with these marker-based estimates of genetic sharing gives us
+an opportunity to examine these estimates more closely. The function
+**rr.matrix** returns an *n*-by-*n* matrix, where *n* is the number of
+samples. In the R script, this matrix is denoted by **R**. Each entry
+of this matrix is the estimated number of alleles that share the same
+state, averaged over all available SNPs. For a given SNP, this is 0 if
+the genotypes of individuals *i* and *j* are homozygous and different;
+2 if both genotypes are homozygous and the same; and 1 in all other
 cases. (Note that, in an AIL, this is equivalent to the number of
-alleles that are IBD since all alleles originate from two inbred
-founders.) To account for uncertainty in the genotype estimates
-whenever the genotypes are missing, we used the following formula for
-the expected number of shared alleles.
+alleles that are identity-by-state, or IBD, since all alleles
+originate from the two inbred progenitors.) To account for uncertainty
+in the genotype estimates whenever the genotypes are missing, we use a
+formula for the expected number of shared alleles.
 
 **Questions**
 
