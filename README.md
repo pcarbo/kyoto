@@ -282,15 +282,11 @@ any trend? These parameters are stored in the matrix **vcparams**. See
 **help(estVC)** for a brief explanation of what variance componentese
 these numbers correspond to.
 
-+ What happens to the genome-wide scan if instead we compute **R**
-using *all* markers? Investigate this by modifying the script so that
-**R** is only calculated once outside the loop that runs over each
-chromosome:
-
-    for (chr in chromosomes) {
-	   # Map QTLs separately for each chromosome.
-       ...
-	}
++ Optional (though highly recommended!): Investigate "proximal
+contamination" by modifying the script so that **R** is only
+calculated once outside the loop that runs over each chromosome. What
+happens to the genome-wide scan if instead we compute **R** using
+*all* markers? Why does this happen?
 
 ####Realized relatedness
 
@@ -339,6 +335,44 @@ genotypes. In my lecture, I claimed that this matrix would yield
 identical results. Implement this in the script, and demonstrate
 empirically that this relatedness matrix yields the same LOD scores at
 all SNPs.
+
+###Part B
+
+In Part B of this module, we will contrast our experiences so far with
+the basic linear regression and LMM methods---methods that are based
+on a single-marker linear regression---with multi-marker regression
+methods that simultaneously consider all markers as potential
+predictors of the phenotype. Our goal is not only to understand the
+benefits of multi-marker mapping, but critically we need to understand
+how to interpret the results. For all of Part B, we will work with the
+[map.qtls.R](R/multi.map.qtls.R) script in R.
+
+Here we will focus on mapping QTLs for freezetocue since the albino
+trait is not particularly challenging to map, so won't reveal anything
+particularly interesting about multi-marker mapping. (However, whis
+shouldn't prevent you from trying mapping the albino trait if you
+would like to do so.) 
+
+As implemented for this module, the multi-marker analysis consists of
+an inner loop and and outer loop. In the outer loop, we try different
+combinations of the hyperparameters in order to identify a combination
+that fits better than the other combinations. This is sort of like EM,
+in the sense that the goal is to arrive at parameter estimates that
+maximize the likelihood, except that maximization is done in a not
+very intelligent fashion. The combinations of hyperparameters that are
+assessed are determined according to **sigma**, **sa** and
+**log10odds** which are set near the beginning of the script.
+
+In the inner loop, for each setting of the hyperparameters we
+calculate approximate posterior probabilities for the regression
+coefficients corresponding to all the markers. The inner loop
+calculations are done efficiently using a *variational
+approximation*. (Alternatively, we could use MCMC to get better
+estimates of the posterior probabilities, but this is much slower.)
+
+
+
+**Questions**
 
 ###Exit slip
 

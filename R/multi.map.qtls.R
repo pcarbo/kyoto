@@ -3,7 +3,7 @@
 # SCRIPT PARAMETERS
 # -----------------
 phenotype  <- "freezetocue"  # Map QTLs for this phenotype.
-generation <- "F2"           # Map QTLs in mice from this generation.
+generation <- "F34"          # Map QTLs in mice from this generation.
 
 # Use these covariates in the QTL mapping.
 covariates <- c("sex","age","albino","agouti")
@@ -11,9 +11,9 @@ covariates <- c("sex","age","albino","agouti")
 # Candidate values of the variance of the residual (sigma), the prior
 # variance of the regression coefficients (sa), and the prior
 # log-odds of inclusion (log10odds)
-sigma     <- seq(0.1,0.3,0.05)
-sa        <- seq(0.01,0.1,0.01)
-log10odds <- seq(-1.5,-0.5,0.1)
+sigma     <- seq(0.1,0.3,0.1)
+sa        <- seq(0.01,0.1,0.02)
+log10odds <- seq(-1.5,-0.5,0.25)
 
 # Initialize the random number generator.
 set.seed(7)
