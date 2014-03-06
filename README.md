@@ -107,9 +107,9 @@ line.
 
 4. Learn how to use the R, QTLRel and varbvs packages for R.
 
-5. Get exposed to [github](http://github.com), an excellent
-resource for sharing data and source code, and collaborating on
-projects.
+5. Get some exposure to [github](http://github.com), a fantastic tool
+for sharing data and source code, and collaborating on projects (and
+creating teaching modules for workshops!).
 
 ###Prerequisites
 
@@ -214,35 +214,41 @@ questions. For all of Part A, we will work with the R script
 [map.qtls.R](R/map.qtls.R).
 
 **Important note:** Some of the computations take a long time to
-complete (10-15 minutes, depending on your computer). For this reason,
-I recommend working in teams of 2-4 so that each member of the team
-can run the script with different settings, and then you can compare
-the results you generated with your team members.
+complete (as long as 15-20 minutes, depending on your computer). For
+this reason, I recommend working in teams of 3-4 so that each member
+of the team can run the script with different settings, and then you
+can compare the results you generated with your team members.
 
-####Support for association with and without accounting for a polygenic effect
+####QTLs with and without a polygenic effect
 
-Here will compare genome-wide scans for a polygenic trait in the F2
-and F34 samples with and without inclusion of the polygenic effect to
-account for population structure. We will start by assessing support
-for SNPs that explain variance in freezing after exposure to the tone
-on third say of the conditioned fear tests ("freezing to cue"). Set
-the script parameters as follows:
+Here we compare genome-wide scans for a polygenic trait in the F2 and
+F34 cohorts using (1) a linear regression model that includes the
+"polygenic effect" (intended to capture population structure), and (2)
+a linear regression model without the polygenic effect.
+
+We start by assessing support for SNPs that explain variance in a
+behavioural trait; specifically, freezing after exposure to tones
+("freezing to cue") on the third day of the conditioned fear test. Set
+the parameters at the top of the **map.qtls.R** script as follows:
 
     phenotype    <- "freezetocue"
+	generation   <- "F2"
     num.perm.qtl <- 100
     num.perm.rel <- 1
     threshold    <- 0.05
     covariates   <- c("sex","age","albino","agouti")
 
-Set **generation = "F2"**, and reexecute the script with **generation
-= "F34"**.
+Also run the script with **generation = "F34"**. (This takes much
+longer to run because many more SNPs are genotyped in the F34 mice, so
+I recommend starting this early.)
 
-We will contrast these results against a Mendelian trait: whether or
-not the mouse is albino. (This is a binary trait, but we can still
-treat it as a continuous variable and attempt to map QTLs for these
-trait using a linear regression. It would be better to use a logistic
-regression.) For this analysis, set **phenotype <- "albino"** and
-**covariates <- NULL**.
+We will contrast these results against a Mendelian trait: whether the
+mouse's coat is white or nor. (This "albino" trait is binary, but we
+can still treat it as a continuous variable and attempt to map QTLs
+using a linear regression.) For this trait, set
+
+    phenotype  <- albino
+	covariates <- NULL
 
 The script calculates two set of LOD scores for all available SNPs on
 chromosomes 1-19, and shows them in a single figure. These LOD scores
