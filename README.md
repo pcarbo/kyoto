@@ -187,16 +187,20 @@ pairwise relatedness.
 execute a permutation-based test with multivariate normally
 distributed data.
 
-+ [misc.R](R/misc.R) Various R functions that do not fit in the other
-files.
++ [misc.R](R/misc.R) Various utility functions that do not fit in the
+other files.
 
 + [map.qtls.R](R/map.qtls.R) This script maps QTLs across the genome
 in a single filial generation of an advanced intercross line (AIL),
-using two different "single-marker" methods: one that ignores unequal
-relatedness in the mouse population (from the R/qtl library), and
-another that attempts to correct for this (from the QTLRel library).
+using two different "single-marker" methods: a method that ignores
+unequal relatedness in the mouse population ("scanone" from the R/qtl
+library); and a method that attempts to correct for this ("scanOne"
+from the QTLRel library).
 
-+ [multi.map.qtls.R](R/multi.map.qtls.R) Description goes here.
++ [multi.map.qtls.R](R/multi.map.qtls.R) This script maps QTLs across
+the genome by simultaneously considering all markers as candidate
+predictors for the trait ("multi-marker mapping"). This script uses
+the same data set as map.qtls.R.
 
 ###Part A
 
