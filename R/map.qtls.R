@@ -27,14 +27,14 @@
 
 # SCRIPT PARAMETERS
 # -----------------
-phenotype    <- "albino"      # Map QTLs for this phenotype.
-generation   <- "F34"         # Map QTLs in mice from this generation.
+phenotype    <- "freezetocue" # Map QTLs for this phenotype.
+generation   <- "F2"          # Map QTLs in mice from this generation.
 num.perm.qtl <- 100           # Replicates for qtl permutation test.
 num.perm.rel <- 1             # Replicates for QTLRel permutation test.
 threshold    <- 0.05          # Significance threshold ("alpha").
 
 # Use these covariates in the QTL mapping.
-covariates <- NULL
+covariates <- c("sex","age","albino","agouti")
 
 # Initialize the random number generator.
 set.seed(7)
@@ -170,7 +170,13 @@ for (chr in chromosomes) {
 
   # Compute the (expected) relatedness matrix using all markers *except* 
   # the markers on the current chromosome.
-  R <- rr.matrix(subset.genoprob(gp,which(map$chr != chr)))
+  # R <- rr.matrix(subset.genoprob(gp,which(map$chr != chr)))
+
+  p1 <- gp$pr[,2,]
+  p2 <- gp$pr[,3,]
+  X  <- p1 + 2*p2
+  R  <- matrix.square(X[,which(map$chr != chr)])
+  
   dimnames(R) <- list(pheno$id,pheno$id)
 
   # Use the relatedness matrix estimated from the marker data to

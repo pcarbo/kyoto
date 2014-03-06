@@ -282,6 +282,16 @@ any trend? These parameters are stored in the matrix **vcparams**. See
 **help(estVC)** for a brief explanation of what variance componentese
 these numbers correspond to.
 
++ What happens to the genome-wide scan if instead we compute **R**
+using *all* markers? Investigate this by modifying the script so that
+**R** is only calculated once outside the loop that runs over each
+chromosome:
+
+    for (chr in chromosomes) {
+	   # Map QTLs separately for each chromosome.
+       ...
+	}
+
 ####Realized relatedness
 
 Working with the marker-based estimates of genetic sharing, or
