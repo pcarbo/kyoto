@@ -301,7 +301,7 @@ ability to identify QTLs, (2) ability to pinpoint the location of the
 genetic polymorphisms underlying these traits? In what way do the two
 mapping methods behave differently in the F2 and F34 populations?
 
-+ *Optional:* What locus do you identify for the albino trait? Does
++ Optional: What locus do you identify for the albino trait? Does
 the QTL region overlap a known gene for this trait. Look up the
 associated SNPs in the [UCSC Genome Browser](http://genome.ucsc.edu)
 (Mouse Genome Assembly 37) to investigate this.
@@ -315,11 +315,11 @@ these chromosomes? These parameters are stored in the matrix
 **vcparams**. See **help(estVC)** for a brief explanation of what
 variance componentes these numbers correspond to.
 
-+ *Optional* (although highly recommended!): Investigate the idea of
++ Optional (though highly recommended!): Investigate the idea of
 "proximal contamination" by modifying the script so that the matrix
-**R** is only calculated once using all the markers. What happens to
-the genome-wide scan if instead we compute **R** using *all* markers?
-Why does this happen?
+**R** is only calculated once using all SNPs. What happens to the
+genome-wide scan if instead we compute **R** using *all* markers?  Why
+does this happen?
 
 ####Realized relatedness (optional)
 
@@ -340,22 +340,24 @@ formula for the expected number of shared alleles.
 **Questions**
 
 + The entries of the realized relatedness matrix are also the kinship
-coefficients times 2. The identity coefficients for (i,i) F2 pairs are
-d1 = 1/2, d7 = 1/2, and for (i,j) F2 pairs they are d = (1/8, 1/8,
-1/4, 0, 1/4, 0, 1/4, 0, 0), and the kinship coefficients are 3/4 and
-1/2 for the diagonal and off-diagonal entries of the F2 kinship
-matrix, respectively). Looking at the histograms of the diagonal (i,i)
-and off-diagonal (i,j) entries of the realized relatedness matrix
-**R**, how do the marker-based estimates in the F2 generation compare
-to what we would expect, and what does that tell about
+coefficients, times 2. The condensed identity coefficients for (i,i)
+F2 pairs are d1 = 1/2, d7 = 1/2; for (i,j) F2 pairs, they are d =
+(1/8, 1/8, 1/4, 0, 1/4, 0, 1/4, 0, 0). The kinship coefficients are
+3/4 and 1/2 for the diagonal and off-diagonal entries of the F2
+kinship matrix, respectively. Looking at the histograms of the
+diagonal (i,i) and off-diagonal (i,j) entries of the realized
+relatedness matrix **R**, how do the marker-based estimates of genetic
+sharing in the F2 generation compare to what the *expected* sharing
+(*i.e.* the kinship coefficients), and what does this distribution
+tell us about genetic relatedness in these mice?
 
 + Compare the relatedness coefficients **R** estimated in the F2 and
-F34 mice. What do these relatedness coefficients tell you about
-population structure and inbreeding in the these mice?
+F34 mice. What do these relatedness coefficients tell us about
+differences in these populations? Why do we observe these differences?
 
-+ Optional: When we have the probabilities of genotypes AA, AB and BB,
-the what is the formula for the expected number of shared alleles
-between two individuals?
++ Optional: Given probabilities of genotypes AA, AB and BB, the what
+is the formula for the expected number of shared alleles between two
+individuals?
 
 + Optional: In human studies, people typically use a different
 realized relatedness matrix. Instead of calculating kinship
@@ -366,8 +368,10 @@ markers; that is, the matrix populated with the allele counts (0, 1 or
 2), or the mean allele counts if there is some uncertainty in the
 genotypes. In my lecture, I claimed that this matrix would yield
 identical results. Implement this in the script, and demonstrate
-empirically that this relatedness matrix yields the same LOD scores at
-all SNPs.
+empirically that this relatedness matrix yields the same (or very
+similar) LOD scores at the SNPs. (In practice, there may be small
+differences when there is uncertainty in the genotypes, or due to the
+numerical procedures for computing the maximum likelihood estimates.
 
 ###Part B
 
