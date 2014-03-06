@@ -54,47 +54,60 @@ identical-by-descent (IBD); in human studies, this is not possible
 
 ![Transmission of alleles in F2 cross.](figures/intercross.gif)
 **Illustration of the transmission of alleles in an F2 intercross.**
-From *Broman and Sen, A Guide to QTL Mapping with R/qtl, 2009.*
+Source: *Broman and Sen, A Guide to QTL Mapping with R/qtl, 2009.*
 
 In a traditional intercross, two inbred strains are crossed to obtain
 the first generation (F1) of mice.  In our case, the inbred founders
 are the [LG/J](http://jaxmice.jax.org/strain/000675.html) and
 [SM/J](http://jaxmice.jax.org/strain/000687.html) inbred strains
-obtained from The Jackson Laboratories, two very widely used inbred
-strains in mouse genetics. Since the mother and father have identical
-chromosomes, each F1 animal is genetically identical (see the
-figure). Therefore, if we denote the LG/J and SM/J inbred strains by A
-and B, all the F1 mice have genotype AB on autosomal chromosomes.
+obtained from Jackson Laboratories. Since the mother and father have
+identical chromosomes, each F1 mouse is genetically identical (see the
+figure). If we denote the LG/J and SM/J alleles by A and B, all F1
+mice have genotype AB (for loci on autosomal chromosomes).
 
-The next generation (F2) is obtained by randomly crossing the F1 mice,
-so there three possible genotypes appear in the F2 mice, AA, AB and
-BB, on autosomal chromosomes. This random mating ("outbreeding")
-repeats in subsequent generations to produce an advanced intercross
-line. In the data set we will examine, we have phenotype and genotype
-data from F2 mice, and in mice from the 34th generation cross. While
-understanding the features of advanced intercross lines is not the
-central objective of this module, it will be useful to observe them as
-we progress.
+The next generation (F2) is obtained by randomly crossing the F1
+mice. The F2 mice have three possible genotypes on autosomal
+chromosomes, AA, AB and BB. This random mating ("outbreeding") is
+repeated in subsequent generations to produce the advanced
+intercross. In the data set we will examine for this module, we have
+phenotype and genotype data from F2 mice, and in mice from the 34th
+generation of the advanced intercross. Understanding the features of
+an advanced intercross is not a central objective of this module, but
+it is useful to make some observations about this as we progress.
 
-The traits we will map in this study are those measured as part of
-conditioned fear tests, which is intended to assess anxiety-related
-behaviour. The amount of "freezing" is measured in three separate days
-after exposure to paired tones (the conditioned stimulus) and shocks
-(the unconditioned stimulus). The larger goal here to advance our
-understanding of the genes underlying anxiety disorders. The fear
-conditioning traits are expected to have a highly complex genetic
-basis, and any individual loci are expected to explain only a small
-proportion of the variance in these traits.
+The quantitative traits we will analyze were measured as part of study
+of anxiety-type behaviour in mice. In the "conditioned fear" paradigm
+to assess anxiety, the amount of "freezing" is measured over three
+separate days after exposure to paired tones (the conditioned
+stimulus) and shocks (the unconditioned stimulus). The goal of this
+study was to advance our understanding of the genes underlying anxiety
+disorders. The fear conditioning traits are expected to have a highly
+complex genetic basis; any individual locus is expected to explain
+only a small proportion of the total variation in these traits.
 
-We have also recorded coat colour, which is a major confounder for
-these tests, because the albino mice are not tracked as well with the
-video equipment. (LG/J mice are albino, and SM/J mice are agouti.)
-This also provides an opportunity to attempt to map the loci for these
-Mendelian traits.
+We have also recorded coat colour (LG/J mice are albino, SM/J mice are
+agouti). Coat colour is a major confounder for the fear conditioning
+traits because albino mice are not tracked as well with the video
+equipment. (If you aren't convinced, you will see that the QTL mapping
+reveals a strong association near a known pigmentation gene.) This
+also provides an opportunity to attempt to map QTLs for a Mendelian
+trait.
 
 ###Objectives
 
-1. Get some exposure to [github](http://github.com), an excellent
+1. Learn how to apply LMMs methods to a genetic association study, and
+discover some of the features of LMMs by example.
+
+2. Learn how to apply multi-marker methods to a genetic association
+study, learn how and discover some the features of multi-marker methods by
+example.
+
+3. Work with a data set generated from a mouse advanced intercross
+line.
+
+4. Learn how to use the R, QTLRel and varbvs packages for R.
+
+5. Get exposed to [github](http://github.com), an excellent
 resource for sharing data and source code, and collaborating on
 projects.
 
