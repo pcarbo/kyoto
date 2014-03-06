@@ -125,23 +125,22 @@ genetic association studies.
 
 ###Getting started
 
-You will need to complete these steps to work on the exercises for
-this module.
+To work on the exercises in this module, you will first need to
+complete these steps.
 
 First, make sure you have a recent version of
-[R](http://www.r-project.org) running on your computer.
+[R](http://www.r-project.org) installed on your computer.
 
-Next, you will need to download and install R packages
+Next, download and install R packages
 [qtl](http://github.com/kbroman/qtl) and
 [QTLRel](http://github.com/pcarbo/QTLRel) using the
-**install.packages** function in R, if you don't already have these
-packages installed on your computer.
+**install.packages** function in R.
 
-We will also make use of the [varbvs](http://github.com/pcarbo/varbvs)
-package. While you can also install this package using
-**install.packages**, I recommend getting the most up-to-date version
-from github. Follow the "Quick start for R" instructions to install
-this package by downloading the source code from github.
+We will also use the [varbvs](http://github.com/pcarbo/varbvs)
+package. You can also install this package using **install.packages**,
+but I recommend getting the most up-to-date version from
+github. Follow the "Quick start for R" instructions to install this
+package from the source code.
 
 Finally, you will need to download the source code for this
 module. The simplest way to do this is to [download this repository
@@ -162,11 +161,11 @@ conditioning study for mice from the F2 and F34 generations of the
 LG/J x SM/J advanced intercross line. Includes other information such
 as gender, age and coat colour.
 
-+ [geno.csv](data/geno.csv) Genotypes at 4608 SNPs for mice from the
-F2 cross and the F34 cross.
++ [geno.csv](data/geno.csv) Genotypes at 4608 SNPs for mice from 
+F2 and F34 crosses.
 
 + [map.csv](data/map.csv) Information about the 4608 SNPs, including
-genetic distances and chromosomal positions (in bases).
+genetic distances and chromosomal positions.
 
 ###Overview of R source code files
 
