@@ -43,14 +43,14 @@ these methods, at least not in detail.
 An advanced intercross population has several features that make it
 well-suited for exploring data analysis procedures for genetic
 association studies: (1) the patterns of linkage disequilibrium are
-more predictable; (2) all observed alleles are common; (3)
-environmental conditions are expected to play a smaller role given
-that the environment is well-controlled; and (4) perhaps most
-significantly for the purposes of this module, in all cases we can
-trace an allele to one of the two inbred founders. As a result, the
-genetic markers tell us directly whether alleles from a given pair of
-individuals are identical-by-descent (IBD), while in general (e.g. in
-human studies) we cannot make such an inference.
+more predictable than in humans; (2) all the alleles are common; (3)
+relative to humans, the environment is better controlled, and so
+environmental conditions are expected to play a smaller role in
+complex traits; and (4) we can trace each allele to one of the two
+inbred founders. As a result of (4), we can determine whether the
+alleles from any two individuals at a given locus are
+identical-by-descent (IBD); in human studies, this is not possible
+(except under certain circumstances).
 
 ![Transmission of alleles in F2 cross.](figures/intercross.gif)
 **Illustration of the transmission of alleles in an F2 intercross.**
