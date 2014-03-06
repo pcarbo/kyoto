@@ -362,9 +362,9 @@ individuals?
 + In human studies, people typically use a different realized
 relatedness matrix. Instead of calculating kinship coefficients based
 on the genotypes, they calculate the realized matrix as
-
+<pre><code>
     R <- X % * % t(X)
-
+</code></pre>
 where **X** is the *n x p* genotype matrix (*n* is the number of
 samples, and *p* is the number of markers; that is, the matrix
 populated with the allele counts (0, 1 or 2), or the mean allele
