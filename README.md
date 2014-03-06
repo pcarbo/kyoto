@@ -250,33 +250,36 @@ using a linear regression.) For this trait, set
     phenotype  <- albino
 	covariates <- NULL
 
-The script calculates two set of LOD scores for all available SNPs on
-chromosomes 1-19, and shows them in a single figure. These LOD scores
-are stored in two data frames: **gwscan.qtl**, the output from the qtl
-function scanone (the light blue line in the figure); and
-**gwscan.rel**, the output from the analogous function in QTLRel,
-scanOne (the dark blue line in the figure).
+The script calculates two sets of LOD scores for all available SNPs on
+chromosomes 1-19. Once all the calculations are completed, it displays
+all the LOD scores in single figure. The LOD scores are stored in two
+data frames in R: **gwscan.qtl** is the output from the qtl function
+**scanone** (this is also the light blue curve in the figure); and
+**gwscan.rel**, the output from the analogous function in **QTLRel**,
+scanOne (this is also the dark blue line in the figure).
 
 To determine whether or not a LOD score constitutes "significant"
 support for an association between genotype and phenotype, we
-calculated a threshold for significance by estimating the distribution
-of LOD scores under the null hypothesis, and then took the threshold
-to be the 100(1 – alpha)th percentile of this distribution, with alpha
-= 0.05. It is recommended that this be done with a large number of
-replicates (at least 1000) to ensure that the threshold is fairly
-stable, but here I use a smaller number (*num.perm.qtl = 100*) so that
-the computations can be completed in a reasonable amount of time. This
-threshold is shown by the dotted red line in the figure.
+calculate a threshold for significance by estimating the distribution
+of LOD scores under the null hypothesis, then we take the threshold to
+be the 100(1 – *a*)th percentile of this distribution, with *a*
+= 0.05. It is recommended that the null distribution be estimated with
+a large number of replicates (at least 1000) to ensure that the
+threshold is fairly stable, but in this case I suggest use a smaller
+number (e.g. **num.perm.qtl = 100**) so that the computations can be
+completed before you have to go home (or return to your hotel
+room). This significance threshold is depicted by the dotted red line
+in the figure.
 
-**Note:** This procedure fails to account for differences in genetic
-sharing among the AIL mice. I also have implemented a test that
-accounts for the covariate structure of the polygenic effect. However,
-this permutation-based test is much slower, so I set **num.perm.rel =
-1**. You are invited to investigate on your own time these two
-different methods for permutation-based tests: (1) the method that
-accounts for the covariance structure in the AIL when permuting the
-data; (2) the standard method that assumes all mice are equally
-related.
+**Important note:** This permutation procedure fails to account for
+differences in genetic sharing among the AIL mice. I also have
+implemented a test that accounts for the covariate structure of the
+polygenic effect. However, this permutation-based test is much slower,
+so I set **num.perm.rel = 1**. You are invited to investigate on your
+own time these two different methods for permutation-based tests: (1)
+the method that accounts for the covariance structure in the AIL when
+permuting the data; (2) the standard method that assumes all mice are
+equally related.
 
 **Questions**
 
