@@ -361,20 +361,17 @@ individuals?
 
 + In human studies, people typically use a different realized
 relatedness matrix. Instead of calculating kinship coefficients based
-on the genotypes, they calculate the realized matrix as
-<pre><code>
-    R <- X % * % t(X)
-</code></pre>
-where **X** is the *n x p* genotype matrix (*n* is the number of
-samples, and *p* is the number of markers; that is, the matrix
-populated with the allele counts (0, 1 or 2), or the mean allele
-counts if there is some uncertainty in the genotypes. In my lecture, I
-claimed that this matrix would yield identical results. Implement this
-in the script, and demonstrate empirically that this relatedness
-matrix yields the same (or very similar) LOD scores at the SNPs. (In
-practice, there may be small differences when there is uncertainty in
-the genotypes, or due to the numerical procedures for computing the
-maximum likelihood estimates.
+on the genotypes, they calculate the realized matrix as **R <- X % * %
+t(X)**, where **X** is the *n x p* genotype matrix (*n* is the number
+of samples, and *p* is the number of markers; that is, the matrix
+populated with allele counts (0, 1 or 2), or the mean allele counts if
+there is some uncertainty in the genotypes. In my lecture, I claimed
+that this matrix would yield identical results. Implement this
+alternative relatedness matrix in the script, and demonstrate
+empirically that this relatedness matrix yields the same (or very
+similar) LOD scores at the SNPs. In practice, there may be small
+differences when there is uncertainty in the genotypes, or due to the
+numerical procedures for computing the maximum likelihood estimates.
 
 ###Part B
 

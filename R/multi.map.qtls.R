@@ -1,9 +1,11 @@
-# *** DESCRIPTION OF SCRIPT GOES HERE ***
+# In this script, we explore an alternative approach to mapping QTLs
+# based on simultaneously considering all SNPs as QTLs. The
+# multi-marker mapping method is implemented in the varbvs package.
 
 # SCRIPT PARAMETERS
 # -----------------
 phenotype  <- "freezetocue"  # Map QTLs for this phenotype.
-generation <- "F34"          # Map QTLs in mice from this generation.
+generation <- "F2"           # Map QTLs in mice from this generation.
 
 # Use these covariates in the QTL mapping.
 covariates <- c("sex","age","albino","agouti")
