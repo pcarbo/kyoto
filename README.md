@@ -34,7 +34,7 @@ mapping quantitative trait loci (QTLs) in mice. Specifically, we work
 with data from an "advanced intercross" of inbred lab strains. In this
 module, our goal is to develop a better appreciation for the features
 of LMMs and multi-marker methods, when and why these approaches might
-be useful, and how to interpret the results. The focus is on
+be useful, and how to correctly interpret the results. The focus is on
 cultivating a better understanding of these methods by example; we
 will not explore the mathematical foundations of these methods, at
 least not in any detail.
@@ -390,12 +390,12 @@ the approaches based on a single-marker linear regression to
 "multi-marker" approaches that simultaneously consider all SNPs as
 potential predictors of the phenotype. Our objective is to understand
 the features of the multi-marker mappingapproach, and to understand
-how to interpret the results. For all of Part B, we will work with the
-[map.qtls.R](R/multi.map.qtls.R) script in R.
+how to correctly interpret the results. For all of Part B, we will
+work with the [map.qtls.R](R/multi.map.qtls.R) script in R.
 
-We concrentrate on mapping QTLs for freezetocue since the albino trait
-is not particularly challenging, as we have seen, and so will not
-reveal anything particularly interesting about multi-marker mapping
+In Part B, we map QTLs for freezetocue only since the albino trait is
+not particularly challenging, as we have seen, and will not reveal
+anything particularly interesting about multi-marker mapping
 methods. (This should not stop you from trying multi-marker mapping
 for the albino trait.) Thus, for this module we set the script
 parameters to
@@ -407,16 +407,19 @@ As before, we will compare the genome-wide scans in the F2 and F34
 mice, so run the script with **generation = "F2"** and **generation =
 "F34"**.
 
-Support for association in different ways in the single-marker and
-multi-marker mapping. In the single-marker mapping, we typically
-quantify support using LOD scores or p-values. In the multi-marker
-mapping, we use posterior probabilities; specifically, for a given
-SNP, we report the posterior probability that the coefficient in the
-linear regression is not zero, or the probability that the SNP is
-*included* in the regression (this is the "posterior inclusion
-probability"). This is what is plotted along the vertical axis of the
-figure. In the figure, I have drawn a threshold at a posterior
-probability of 0.9, but this threshold is arbitary.
+In order to correctly interpret the multi-marker mapping results, we
+first need cover a few important points:
+
++ In the single-marker mapping, we typically quantify support for
+association using LOD scores or p-values. In the multi-marker mapping,
+we use posterior probabilities; specifically, for a given SNP, we
+report the posterior probability that the coefficient in the linear
+regression is not zero, or the probability that the SNP is *included*
+in the regression (I call this the "posterior inclusion probability").
+This is what is plotted along the vertical axis of the figure.
+
++ In the figure, I have drawn a threshold at a posterior probability
+of 0.9, but this threshold is arbitary.
 
 **Important note:** In multi-marker mapping, a SNP is only included in
 the model if it is useful for predicting the trait. Therefore, if two
