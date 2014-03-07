@@ -140,9 +140,9 @@ Next, download and install R packages
 
 We will also use the [varbvs](http://github.com/pcarbo/varbvs)
 package. You can also install this package using **install.packages**,
-but I recommend getting the most up-to-date version from
-github. Follow the "Quick start for R" instructions to install this
-package from the source code.
+but I recommend getting the most up-to-date version from github, which
+has a few bug fixes. Follow the "Quick start for R" instructions to
+install this package from the source code on github.
 
 Finally, you will need to download the source code for this
 module. The simplest way to do this is to [download this repository
@@ -182,7 +182,7 @@ experimental cross data, and for converting the data into the
 various formats used by R/qtl and QTLRel.
 
 + [mapping.tools.R](R/mapping.tools.R) Functions for analyzing the
-QTL experiment data, and for computing marker-based estimates of
+QTL experiment data, and for computing the marker-based estimates of
 pairwise relatedness.
 
 + [mvnpermute.R](R/mvnpermute.R) Function written by Mark Abney to
@@ -202,24 +202,24 @@ from the QTLRel library).
 + [multi.map.qtls.R](R/multi.map.qtls.R) This script maps QTLs across
 the genome by simultaneously considering all markers as candidate
 predictors for the trait ("multi-marker mapping"). This script uses
-the same data set as map.qtls.R.
+the same data as map.qtls.R.
 
 ###Part A
 
 In Part A of this module, we investigate the linear mixed model (LMM)
 for mapping QTLs in the advanced intercross.
 
-Some of the more involved questions are optional; please focus on the
-non-optional questions, so that we have time to move on to Part
-B,. Later, if there is time we can return to the more difficult
-questions. For all of Part A, we will work with the R script
-[map.qtls.R](R/map.qtls.R).
-
-**Important note:** Some of the computations take a long time to
+**Important note #1:** Some of the computations take a long time to
 complete (as long as 15-20 minutes, depending on your computer). For
 this reason, I recommend working in teams of 3-4 so that each member
 of the team can run the script with different settings, and then you
 can compare the results you generated with your team members.
+
+**Important note #2:** Some of the more involved questions are
+optional; please focus on the non-optional questions, so that we have
+time to move on to Part B,. Later, if there is time we can return to
+the more difficult questions. For all of Part A, we will work with the
+R script [map.qtls.R](R/map.qtls.R).
 
 ####QTLs with and without a polygenic effect
 
