@@ -370,26 +370,27 @@ individuals?
 
 4. In human studies, people typically use a different realized
 relatedness matrix. Instead of calculating kinship coefficients based
-on the genotypes, they calculate the realized matrix as **R <- X % * %
-t(X)**, where **X** is the *n x p* genotype matrix (*n* is the number
-of samples, and *p* is the number of markers; that is, the matrix
-populated with allele counts (0, 1 or 2), or the mean allele counts if
-there is some uncertainty in the genotypes. In my lecture, I claimed
-that this matrix would yield identical results. Implement this
-alternative relatedness matrix in the script, and demonstrate
-empirically that this relatedness matrix yields the same (or very
-similar) LOD scores at the SNPs. In practice, there may be small
-differences when there is uncertainty in the genotypes, or due to the
-numerical procedures for computing the maximum likelihood estimates.
+on the genotypes, they calculate the realized matrix as **R <- (X *
+t(X)) / p**, where **X** is the *n* x *p* genotype matrix (*n* is the
+number of samples, and *p* is the number of markers; that is, **X** is
+the matrix populated with allele counts (0, 1 or 2), or the mean
+allele counts if there is some uncertainty in the genotypes. In my
+lecture, I claimed that this matrix would yield identical
+results. Implement this alternative relatedness matrix in the script,
+and demonstrate empirically that this relatedness matrix yields the
+same (or very similar) LOD scores at the SNPs. (In practice, there may
+be small differences when there is uncertainty in the genotypes, or
+due to the numerical procedures for computing the maximum likelihood
+estimates.)
 
 ###Part B
 
 In Part B of this module, we will contrast our experiences so far with
-the methods based on a single-marker linear regression with
-"multi-marker" methods that simultaneously consider all markers as
-potential predictors of the phenotype. Our goals are to understand the
-features of multi-marker mapping, and understand how to interpret the
-results. For all of Part B, we will work with the
+the approaches based on a single-marker linear regression to
+"multi-marker" approaches that simultaneously consider all SNPs as
+potential predictors of the phenotype. Our objective is to understand
+the features of the multi-marker mappingapproach, and to understand
+how to interpret the results. For all of Part B, we will work with the
 [map.qtls.R](R/multi.map.qtls.R) script in R.
 
 We concrentrate on mapping QTLs for freezetocue since the albino trait
