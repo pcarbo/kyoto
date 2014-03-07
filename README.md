@@ -43,13 +43,14 @@ An advanced intercross population has several features that make it
 well-suited for exploring data analysis procedures for genetic
 association studies: (1) the patterns of linkage disequilibrium are
 more predictable than in humans; (2) all the alleles are common; (3)
-relative to humans, the environment is better controlled, and so
-environmental conditions are expected to play a smaller role in
-complex traits; and (4) we can trace each allele to one of the two
-inbred founders. As a result of (4), we can determine whether the
-alleles from any two individuals at a given locus are
-identical-by-descent (IBD); in human studies, this is not possible
-(except under certain circumstances).
+the environment is better controlled, so environmental conditions are
+expected to play a smaller role in complex traits than in humans; and
+(4) we can trace each allele to one of the two inbred founders. As a
+result of (4), imputation of missing genotypes (and haplotypes) is
+more straightforward, we can determine whether the alleles from any
+two individuals at a given locus are identical-by-descent (IBD); in
+human studies, this is not possible (except under specific
+circumstances).
 
 ![Transmission of alleles in F2 cross.](figures/intercross.gif)
 **Illustration of the transmission of alleles in an F2 intercross.**
@@ -59,24 +60,24 @@ In a traditional intercross, two inbred strains are crossed to obtain
 the first generation (F1) of mice.  In our case, the inbred founders
 are the [LG/J](http://jaxmice.jax.org/strain/000675.html) and
 [SM/J](http://jaxmice.jax.org/strain/000687.html) inbred strains
-obtained from Jackson Laboratories. Since the mother and father have
-identical chromosomes, each F1 mouse is genetically identical (see the
-figure). If we denote the LG/J and SM/J alleles by A and B, all F1
-mice have genotype AB (for loci on autosomal chromosomes).
+obtained from Jackson Laboratories. Since the mother (A) and father
+(B) have identical chromosomes, each F1 mouse is genetically identical
+(see the figure). If we denote the LG/J and SM/J alleles by A and B,
+all F1 mice have genotype AB at loci on autosomal chromosomes.
 
 The next generation (F2) is obtained by randomly crossing the F1
-mice. The F2 mice have three possible genotypes on autosomal
-chromosomes, AA, AB and BB. This random mating ("outbreeding") is
-repeated in subsequent generations to produce the advanced
-intercross. In the data set we will examine for this module, we have
-phenotype and genotype data from F2 mice, and in mice from the 34th
-generation of the advanced intercross. Understanding the features of
-an advanced intercross is not a central objective of this module, but
-it is useful to make some observations about this as we progress.
+mice. The F2 mice have three possible genotype outcomes on autosomal
+chromosomes, AA, AB and BB. This random mating is repeated in
+subsequent generations to produce the advanced intercross. In the data
+set used for this module, we have phenotype and genotype data from F2
+mice, and in mice from the 34th generation of the advanced
+intercross. Understanding the features of an advanced intercross is
+not a central objective of this module, but it is useful to learn
+about this.
 
-The quantitative traits we will analyze were measured as part of study
-of anxiety-type behaviour in mice. In the "conditioned fear" paradigm
-to assess anxiety, the amount of "freezing" is measured over three
+The quantitative traits we analyze were measured as part of a study of
+anxiety-like behaviour in mice. In the "conditioned fear" paradigm to
+assess anxiety, the amount of "freezing" is measured over three
 separate days after exposure to paired tones (the conditioned
 stimulus) and shocks (the unconditioned stimulus). The goal of this
 study was to advance our understanding of the genes underlying anxiety
@@ -84,43 +85,45 @@ disorders. The fear conditioning traits are expected to have a highly
 complex genetic basis; any individual locus is expected to explain
 only a small proportion of the total variation in these traits.
 
-We have also recorded coat colour (LG/J mice are albino, SM/J mice are
-agouti). Coat colour is a major confounder for the fear conditioning
-traits because albino mice are not tracked as well with the video
-equipment. (If you aren't convinced, you will see that the QTL mapping
-reveals a strong association near a known pigmentation gene.) This
-also provides an opportunity to attempt to map QTLs for a Mendelian
-trait.
+We have also recorded coat colour; LG/J mice are albino, SM/J mice are
+agouti. Coat colour is a confounder for the fear conditioning
+phenotypes because albino mice are not tracked as well with the video
+equipment. (If you do not include coat colour as a covariate for the
+fear conditioning trait, you will see that the QTL mapping reveals a
+strong association near a known pigmentation gene.) This also provides
+an opportunity to attempt to map QTLs for a Mendelian trait.
 
 ###Objectives
 
-1. Learn how to apply LMMs methods to a genetic association study, and
-discover some of the features of LMMs by example.
+1. Learn how to apply a LMM to a genetic association study, and
+discover some of the features of LMMs through practice.
 
 2. Learn how to apply multi-marker methods to a genetic association
-study, learn how and discover some the features of multi-marker methods by
-example.
+study, and discover some the features of multi-marker methods through
+practice.
 
-3. Work with a data set generated from a mouse advanced intercross
-line.
+3. Work with genotype and phenotype data in R from a mouse advanced
+intercross line.
 
-4. Learn how to use the R, QTLRel and varbvs packages for R.
+4. Learn how to use R packages qtl, QTLRel and varbvs.
 
-5. Get some exposure to [github](http://github.com), a fantastic tool
+5. Get some exposure to [github](http://github.com), an online tool
 for sharing data and source code, and collaborating on projects (and
 creating teaching modules for workshops!).
 
 ###Prerequisites
 
 1. You are comfortable using the R interface, executing R scripts,
-manipulating variables in R, working with functions in R, and making
-small modifications to R scripts.
+manipulating variables in R (e.g. vectors, matrices, lists, data
+frames), working with R functions, and making small modifications to R
+scripts.
 
 2. You are familiar, or at least have exposure to, the basic notions
 and standard terminology used to describe the statistical analysis of
-genetic association studies.
+genetic and genome-wide association studies.
 
-3. You are familiar with core concepts in genetics and genetic analysis.
+3. You are familiar with many of the core concepts in genetics and
+genetic analysis.
 
 ###Getting started
 
