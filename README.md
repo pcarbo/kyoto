@@ -292,7 +292,7 @@ method that assumes all mice are equally related.
 
 1. Which QTLs are reported as significant when we use the basic linear
 regression (qtl), and when we use the LMM (QTLRel), in the F2 mice,
-and in the F34 mice? Do we identify different QTLs?
+and in the F34 mice? Do we identify different QTLs, or the same QTLs?
 
 2. What trends do you notice about the association signal using the
 basic linear regression compared to the LMM, in the F2 and F34
@@ -419,53 +419,62 @@ in the regression (we call this the "posterior inclusion probability").
 This is what is plotted along the vertical axis of the figure.
 
 + Unlike single-marker mapping, there is no need to separately
-calculate a threshold for significance.In the figure, I have drawn a
-threshold at a posterior probability of 0.9, but this is purely
-arbitary.
+calculate a threshold for significance. In the figure, I have drawn a
+threshold at a posterior probability of 0.9, but this is an arbitary
+threshold.
 
 + The interpretation of these probabilities is somewhat complicated by
-the fact that I calculate the posterior probabilities
-*approximately*. This is done in order to make these calculations more
-efficient, so that we can tackle very large data sets. In particular,
-this approximation does not accurately capture the uncertainty in the
+the fact that I calculate the posterior probabilities *approximately*.
+This is done in order to make these calculations more efficient, so
+that we can tackle very large data sets. In particular, this
+approximation does not accurately capture the uncertainty in the
 included SNP when many nearby SNPs are strongly correlated with each
-other. Therefore, you should interpret a SNP with a high posterior
-probability as meaning that the QTL is located somewhere nearby the
-SNP.
+other. (We could use MCMC instead to get better estimates of the
+posterior probabilities, but this is much slower, and does not scale
+well to large data sets.) Therefore, you should interpret a SNP with a
+high posterior probability as meaning that the QTL is located
+somewhere nearby the SNP.
 
 + A key component of the multi-marker mapping is that it *fits the
 priors to the data*. More precisely, we have an additional set of
 parameters (the "hyperparameters") that specify the prior distribution
-of the regression coefficients. In the script, we try different
-combinations of hyperparameters (these combinations are chosen by
-hand), and we settle on the combination that best fits the data;
-*i.e.* the hyperparameter setting that maximizes the probability of
-the data. After running the script, the best combination of the
-hyperparameters is **grid[i,]**.
+of the regression coefficients. Fitting the priors to the data allows
+us to *calibrate* the posterior probabilities so that they better
+reflect the probability that the locus truly contains a causal
+polymorphism. In the script, we try different combinations of
+hyperparameters (these combinations are chosen by hand), and we settle
+on the combination that best fits the data; *i.e.* the hyperparameter
+setting that maximizes the probability of the data. After running the
+script, the best combination of the hyperparameters is **grid[i,]**.
 
-+ In practice, a single 
++ Since we often have very little information about the
+hyperparameters in genome-wide association studies, we are often
+uncertain about which setting of the hyperparameters is
+best. Therefore, it is usually better to account for this uncertainty
+by *averaging* over different hyperparameter settings. I did not
+implement this averaging for this module because it adds another layer
+of complexity.
 
 **Questions**
 
-+ Are the "significant" QTLs in the multi-marker mapping the same as
-the significant QTLs in the single-marker mapping results? Or, more
-precisely, do the QTLs with the strongest support in the multi-marker
-mapping correspond to the QTLs with the strongest support in the
-single-marker mapping? Does the association signal from the
-multi-marker mapping (the posterior probabilities) more closely
-resemble the single-marker mapping results with the polygenic effect,
-or without?
++ To what extent do the QTLs with the strongest support in the
+multi-marker mapping (the highest posterior probabilities) overlap the
+QTLs with the strongest support in the single-marker mapping? Does the
+genome-wide association signal from the multi-marker mapping more
+closely resemble the results with the LMM (QTLRel), or the results
+using the basic linear regression (qtl)? How can we explain the
+similarities and differences in the support for QTLs?
 
-+ The second 
++ The second question concerns interpretation of the
+hyperparameters. Recall, the "best fit" hyperparameters are
+**grid[i,]**. Given what we you have learned about the prior
+genome-wide log-odds (**grid[i,"log10odds"]**), does the "best fit"
+value make sense for the F2 and F34 populations? How can you explain
+this estimate?
 
-
-
-In the inner loop, for each setting of the hyperparameters we
-calculate approximate posterior probabilities for the regression
-coefficients corresponding to all the markers. The inner loop
-calculations are done efficiently using a *variational
-approximation*. (Alternatively, we could use MCMC to get better
-estimates of the posterior probabilities, but this is much slower.)
++ Optional: **grid[i,"sa"]** gives the "best fit" for the prior
+variance of the regression coefficients. Why should we be cautious in
+interpreting this estimate?
 
 ###Exit slip
 
