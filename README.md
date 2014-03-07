@@ -207,19 +207,19 @@ the same data as map.qtls.R.
 ###Part A
 
 In Part A of this module, we investigate the linear mixed model (LMM)
-for mapping QTLs in the advanced intercross.
+for mapping QTLs in the advanced intercross. For all of Part A, we
+will work with the R script [map.qtls.R](R/map.qtls.R).
 
 **Important note #1:** Some of the computations take a long time to
 complete (as long as 15-20 minutes, depending on your computer). For
 this reason, I recommend working in teams of 3-4 so that each member
-of the team can run the script with different settings, and then you
+of your team can run the script with different settings, and then you
 can compare the results you generated with your team members.
 
 **Important note #2:** Some of the more involved questions are
 optional; please focus on the non-optional questions, so that we have
-time to move on to Part B,. Later, if there is time we can return to
-the more difficult questions. For all of Part A, we will work with the
-R script [map.qtls.R](R/map.qtls.R).
+time for Part B of the module. Later, if there is time we can return
+to the more challenging questions. 
 
 ####QTLs with and without a polygenic effect
 

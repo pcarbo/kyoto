@@ -53,7 +53,7 @@ source("mvnpermute.R")
 
 # LOAD DATA
 # ---------
-# Load the phenotype, phenotype and marker data from csv files.
+# Load the phenotype, genotype and marker data from csv files.
 cat("Loading phenotype, genotype and marker data.\n");
 pheno <- read.pheno("../data/pheno.csv")
 map   <- read.map("../data/map.csv")
