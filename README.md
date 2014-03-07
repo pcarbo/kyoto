@@ -28,17 +28,16 @@ This program is distributed in the hope that it will be useful, but
 The goal of this module is to explore linear mixed models (LMMs) and
 multi-marker models for identifying genetic variants correlated with a
 quantitative trait. LMMs and multi-marker mapping methods have been
-used to map the genetic loci that contribute to risk of complex human
-diseases, but here we will illustrate these methods for mapping
-quantitative trait loci (QTLs) in mice instead. Specifically, we will
-be working with data from advanced intercrosses of (inbred) lab
-strains. In this module, our goal is to develop a better appreciation
-for the features of LMMs and multi-marker methods;when and why these
-approaches might be useful; and how to interpret the results.
-
-The focus is on cultivating a better understanding of these methods
-by example; we will not explore the mathematical foundations of
-these methods, at least not in detail.
+used to map genetic loci that contribute to risk of complex human
+diseases, but here we instead demonstrate the use of these methods for
+mapping quantitative trait loci (QTLs) in mice. Specifically, we work
+with data from an "advanced intercross" of inbred lab strains. In this
+module, our goal is to develop a better appreciation for the features
+of LMMs and multi-marker methods, when and why these approaches might
+be useful, and how to interpret the results. The focus is on
+cultivating a better understanding of these methods by example; we
+will not explore the mathematical foundations of these methods, at
+least not in any detail.
 
 An advanced intercross population has several features that make it
 well-suited for exploring data analysis procedures for genetic
