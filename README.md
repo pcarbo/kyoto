@@ -219,17 +219,18 @@ can compare the results you generated with your team members.
 **Important note #2:** Some of the more involved questions are
 optional; please focus on the non-optional questions, so that we have
 time for Part B of the module. Later, if there is time we can return
-to the more challenging questions. 
+to the optional questions. 
 
 ####QTLs with and without a polygenic effect
 
 Here we compare genome-wide scans for a polygenic trait in the F2 and
-F34 cohorts using (1) a linear regression model that includes the
-"polygenic effect" (intended to capture population structure), and (2)
-a linear regression model without the polygenic effect.
+F34 cohorts using: (1) a linear regression model that includes the
+"polygenic effect" (with a covariance matrix that is intended to
+capture population structure); (2) a linear regression model that does
+not include the polygenic effect.
 
 We start by assessing support for SNPs that explain variance in a
-behavioural trait; specifically, freezing after exposure to tones
+behavioural trait. The trait is freezing after exposure to tones
 ("freezing to cue") on the third day of the conditioned fear test. Set
 the parameters at the top of the **map.qtls.R** script as follows:
 
@@ -240,25 +241,29 @@ the parameters at the top of the **map.qtls.R** script as follows:
     threshold    <- 0.05
     covariates   <- c("sex","age","albino","agouti")
 
-Also run the script with **generation = "F34"**. (This takes much
-longer to run because many more SNPs are genotyped in the F34 mice, so
-I recommend starting this early.)
+Also, run the script with **generation = "F34"**. (This takes much
+longer to complete because many more SNPs are genotyped in the F34
+mice, so I recommend starting this early.)
 
-We will contrast these results against a Mendelian trait: whether the
-mouse's coat is white or nor. (This "albino" trait is binary, but we
-can still treat it as a continuous variable and attempt to map QTLs
-using a linear regression.) For this trait, set
+We will contrast these results against results on a Mendelian trait:
+whether the mouse's coat is white or not. (This "albino" trait is
+binary, but we can still treat it as a continuous phenotype and
+attempt to map QTLs using a linear regression.) For this trait, set
 
     phenotype  <- albino
 	covariates <- NULL
 
+In total, you should run **map.qtls.R** 4 times with different
+parameter settings.
+
 The script calculates two sets of LOD scores for all available SNPs on
 chromosomes 1-19. Once all the calculations are completed, it displays
-all the LOD scores in single figure. The LOD scores are stored in two
-data frames in R: **gwscan.qtl** is the output from the qtl function
-**scanone** (this is also the light blue curve in the figure); and
-**gwscan.rel**, the output from the analogous function in **QTLRel**,
-scanOne (this is also the dark blue line in the figure).
+the LOD scores for all the SNPs in one graphic. In the R workspace,
+the LOD scores are stored in two data frames: **gwscan.qtl** is the
+output from the qtl function **scanone** (this is also the light blue
+curve in the figure); and **gwscan.rel**, the output from the
+analogous function in **QTLRel**, scanOne (this is also the dark blue
+line in the figure).
 
 To determine whether or not a LOD score constitutes "significant"
 support for an association between genotype and phenotype, we
@@ -267,44 +272,45 @@ of LOD scores under the null hypothesis, then we take the threshold to
 be the 100(1 – *a*)th percentile of this distribution, with *a*
 = 0.05. It is recommended that the null distribution be estimated with
 a large number of replicates (at least 1000) to ensure that the
-threshold is fairly stable, but in this case I suggest use a smaller
-number (e.g. **num.perm.qtl = 100**) so that the computations can be
-completed before you have to go home (or return to your hotel
-room). This significance threshold is depicted by the dotted red line
-in the figure.
+threshold is fairly stable. But in this case I suggest you use a
+smaller number of replicates (**num.perm.qtl = 100**) so that the
+computations can be completed before you have to go home (or return to
+your hotel room)! This significance threshold is depicted by the
+dotted orange line in the figure.
 
-**Important note:** This permutation procedure does not account for
-differences in genetic sharing among the AIL mice. I have also
-implemented a permutation-based test that observes the covariance
-structure of the polygenic effect. However, this permutation-based
-test is much slower, so I set **num.perm.rel = 1**. On your own time,
-you are invited to investigate these two different methods for
-estimating the null distribution of LOD scores: (1) the method that
-generates permutations observing the covariance structure of the AIL
-mice; (2) the standard method that assumes all mice are equally
-related.
+**Note:** This permutation procedure does not account for differences
+in genetic sharing among the AIL mice. I have also implemented a
+permutation-based test that observes the covariance structure of the
+polygenic effect. However, this permutation-based test is much slower,
+so I set **num.perm.rel = 1**. On your own time, you are invited to
+investigate these two different methods for estimating the null
+distribution of LOD scores: (1) the method that generates permutations
+observing the covariance structure of the AIL mice; (2) the standard
+method that assumes all mice are equally related.
 
 **Questions**
 
 + Which QTLs are reported as significant when we use the basic linear
 regression (qtl), and when we use the LMM (QTLRel), in the F2 mice,
-and in the F34 mice?
+and in the F34 mice? Do we identify different QTLs?
 
-+ What trends become apparent in the support for association using the
-basic linear regression compared to using the LMM, in the F2 and F34
-cohorts?
++ What trends do you notice about the association signal using the
+basic linear regression compared to the LMM, in the F2 and F34
+cohorts? How can you explain these trends?
 
 + It is also useful to compare the genome-wide scans in the F2 and F34
 generations, because the patterns of linkage disequilibrium are very
-different. (The F34 mice have had a much greater opportunity to
-accumulate recombinations.) Based on the results in freezetocue and
-albino, what can you say about the F2 and F34 mice in terms of: (1)
-ability to identify QTLs, (2) ability to pinpoint the location of the
-genetic polymorphisms underlying these traits? In what way do the two
-mapping methods behave differently in the F2 and F34 populations?
+different. (The F34 mice have accumulated many more recombinations.)
+Based on the results in freezetocue and albino, what can you say about
+the F2 and F34 mice in terms of: (1) ability to identify QTLs? (2)
+overlap in the QTLs? (3) ability to pinpoint the location of the
+genetic polymorphisms underlying these traits? Are the significance
+thresholds different in the F2 and F34 cohorts? If so, why? In what
+way do the two mapping methods behave differently in the F2 and F34
+populations?
 
 + Optional: What locus do you identify for the albino trait? Does
-the QTL region overlap a known gene for this trait. Look up the
+the QTL region overlap a known gene for this trait? Search for the
 associated SNPs in the [UCSC Genome Browser](http://genome.ucsc.edu)
 (Mouse Genome Assembly 37) to investigate this.
 
@@ -313,15 +319,15 @@ separately for each chromosome. We can investigate the parameters
 corresponding to the variance components of this model. How do these
 parameter estimates differ among the chromosomes? Do you observe a
 trend in these estimates based on looking at the association signal on
-these chromosomes? These parameters are stored in the matrix
-**vcparams**. See **help(estVC)** for a brief explanation of what
-variance componentes these numbers correspond to.
+these chromosomes? These parameters are stored in matrix
+**vcparams**. See **help(estVC)** for a brief explanation of the
+corresponding variance components.
 
 + Optional (though highly recommended!): Investigate the idea of
 "proximal contamination" by modifying the script so that the matrix
-**R** is only calculated once using all SNPs. What happens to the
-genome-wide scan if instead we compute **R** using *all* markers?  Why
-does this happen?
+**R** is only calculated once using all SNPs. What happens to the LOD
+scores if we compute **R** only once using *all* markers? Can you
+explain why these LOD scores are different?
 
 ####Realized relatedness (optional)
 
