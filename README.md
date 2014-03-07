@@ -290,15 +290,15 @@ method that assumes all mice are equally related.
 
 **Questions**
 
-+ Which QTLs are reported as significant when we use the basic linear
+1. Which QTLs are reported as significant when we use the basic linear
 regression (qtl), and when we use the LMM (QTLRel), in the F2 mice,
 and in the F34 mice? Do we identify different QTLs?
 
-+ What trends do you notice about the association signal using the
+2. What trends do you notice about the association signal using the
 basic linear regression compared to the LMM, in the F2 and F34
 cohorts? How can you explain these trends?
 
-+ It is also useful to compare the genome-wide scans in the F2 and F34
+3. It is also useful to compare the genome-wide scans in the F2 and F34
 generations, because the patterns of linkage disequilibrium are very
 different. (The F34 mice have accumulated many more recombinations.)
 Based on the results in freezetocue and albino, what can you say about
@@ -309,12 +309,12 @@ thresholds different in the F2 and F34 cohorts? If so, why? In what
 way do the two mapping methods behave differently in the F2 and F34
 populations?
 
-+ Optional: What locus do you identify for the albino trait? Does
+4. Optional: What locus do you identify for the albino trait? Does
 the QTL region overlap a known gene for this trait? Search for the
 associated SNPs in the [UCSC Genome Browser](http://genome.ucsc.edu)
 (Mouse Genome Assembly 37) to investigate this.
 
-+ For the LMM data analysis, the script fits the LMM to the data
+5. For the LMM data analysis, the script fits the LMM to the data
 separately for each chromosome. We can investigate the parameters
 corresponding to the variance components of this model. How do these
 parameter estimates differ among the chromosomes? Do you observe a
@@ -323,7 +323,7 @@ these chromosomes? These parameters are stored in matrix
 **vcparams**. See **help(estVC)** for a brief explanation of the
 corresponding variance components.
 
-+ Optional (though highly recommended!): Investigate the idea of
+6. Optional (though highly recommended!): Investigate the idea of
 "proximal contamination" by modifying the script so that the matrix
 **R** is only calculated once using all SNPs. What happens to the LOD
 scores if we compute **R** only once using *all* markers? Can you
@@ -331,23 +331,24 @@ explain why these LOD scores are different?
 
 ####Realized relatedness (optional)
 
-Working with these marker-based estimates of genetic sharing gives us
-an opportunity to examine these estimates more closely. The function
-**rr.matrix** returns an *n*-by-*n* matrix, where *n* is the number of
-samples. In the R script, this matrix is denoted by **R**. Each entry
-of this matrix is the estimated number of alleles that share the same
-state, averaged over all available SNPs. For a given SNP, this is 0 if
-the genotypes of individuals *i* and *j* are homozygous and different;
-2 if both genotypes are homozygous and the same; and 1 in all other
-cases. (Note that, in an AIL, this is equivalent to the number of
-alleles that are identity-by-state, or IBD, since all alleles
-originate from the two inbred progenitors.) To account for uncertainty
-in the genotype estimates whenever the genotypes are missing, we use a
-formula for the expected number of shared alleles.
+Working with the marker-based estimates of genetic sharing gives us an
+opportunity to examine these estimates more closely in the advanced
+intercross. The function **rr.matrix** returns an *n*-by-*n* matrix,
+where *n* is the number of samples. In the R script, this matrix is
+denoted by **R**. Each entry of this matrix is the estimated number of
+alleles that share the same state, averaged over all available
+SNPs. For a given SNP, this is 0 if the genotypes of individuals *i*
+and *j* are homozygous and different; 2 if both genotypes are
+homozygous and the same; and 1 in all other cases. (Note that, in an
+AIL, this is equivalent to the number of alleles that are
+identity-by-descent, or IBD, since all alleles originate from the two
+inbred founders.) To account for uncertainty in the genotype estimates
+whenever the genotypes are missing, we use a formula for the expected
+number of shared alleles.
 
 **Questions**
 
-+ The entries of the realized relatedness matrix are also the kinship
+1. The entries of the realized relatedness matrix are also the kinship
 coefficients, times 2. The condensed identity coefficients for (i,i)
 F2 pairs are d1 = 1/2, d7 = 1/2; for (i,j) F2 pairs, they are d =
 (1/8, 1/8, 1/4, 0, 1/4, 0, 1/4, 0, 0). The kinship coefficients are
@@ -355,19 +356,19 @@ F2 pairs are d1 = 1/2, d7 = 1/2; for (i,j) F2 pairs, they are d =
 kinship matrix, respectively. Looking at the histograms of the
 diagonal (i,i) and off-diagonal (i,j) entries of the realized
 relatedness matrix **R**, how do the marker-based estimates of genetic
-sharing in the F2 generation compare to what the *expected* sharing
-(*i.e.* the kinship coefficients), and what does this distribution
-tell us about genetic relatedness in these mice?
+sharing in the F2 generation compare to the *expected* sharing (*i.e.*
+the kinship coefficient), and what does this distribution tell us
+about genetic relatedness in these mice?
 
-+ Compare the relatedness coefficients **R** estimated in the F2 and
+2. Compare the relatedness coefficients **R** estimated in the F2 and
 F34 mice. What do these relatedness coefficients tell us about
 differences in these populations? Why do we observe these differences?
 
-+ Given probabilities of genotypes AA, AB and BB, the what is the
+3. Given probabilities of genotypes AA, AB and BB, the what is the
 formula for the expected number of shared alleles between two
 individuals?
 
-+ In human studies, people typically use a different realized
+4. In human studies, people typically use a different realized
 relatedness matrix. Instead of calculating kinship coefficients based
 on the genotypes, they calculate the realized matrix as **R <- X % * %
 t(X)**, where **X** is the *n x p* genotype matrix (*n* is the number
