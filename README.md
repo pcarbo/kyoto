@@ -376,29 +376,79 @@ numerical procedures for computing the maximum likelihood estimates.
 ###Part B
 
 In Part B of this module, we will contrast our experiences so far with
-the basic linear regression and LMM methods---methods that are based
-on a single-marker linear regression---with multi-marker regression
-methods that simultaneously consider all markers as potential
-predictors of the phenotype. Our goal is not only to understand the
-benefits of multi-marker mapping, but critically we need to understand
-how to interpret the results. For all of Part B, we will work with the
+the methods based on a single-marker linear regression with
+"multi-marker" methods that simultaneously consider all markers as
+potential predictors of the phenotype. Our goals are to understand the
+features of multi-marker mapping, and understand how to interpret the
+results. For all of Part B, we will work with the
 [map.qtls.R](R/multi.map.qtls.R) script in R.
 
-Here we will focus on mapping QTLs for freezetocue since the albino
-trait is not particularly challenging to map, so won't reveal anything
-particularly interesting about multi-marker mapping. (However, whis
-shouldn't prevent you from trying mapping the albino trait if you
-would like to do so.) 
+We concrentrate on mapping QTLs for freezetocue since the albino trait
+is not particularly challenging, as we have seen, and so will not
+reveal anything particularly interesting about multi-marker mapping
+methods. (This should not stop you from trying multi-marker mapping
+for the albino trait.) Thus, for this module we set the script
+parameters to
 
-As implemented for this module, the multi-marker analysis consists of
-an inner loop and and outer loop. In the outer loop, we try different
-combinations of the hyperparameters in order to identify a combination
-that fits better than the other combinations. This is sort of like EM,
-in the sense that the goal is to arrive at parameter estimates that
-maximize the likelihood, except that maximization is done in a not
-very intelligent fashion. The combinations of hyperparameters that are
-assessed are determined according to **sigma**, **sa** and
-**log10odds** which are set near the beginning of the script.
+    phenotype  <- "freezetocue"
+    covariates <- c("sex","age","albino","agouti")
+
+As before, we will compare the genome-wide scans in the F2 and F34
+mice, so run the script with **generation = "F2"** and **generation =
+"F34"**.
+
+Support for association in different ways in the single-marker and
+multi-marker mapping. In the single-marker mapping, we typically
+quantify support using LOD scores or p-values. In the multi-marker
+mapping, we use posterior probabilities; specifically, for a given
+SNP, we report the posterior probability that the coefficient in the
+linear regression is not zero, or the probability that the SNP is
+*included* in the regression (this is the "posterior inclusion
+probability"). This is what is plotted along the vertical axis of the
+figure. In the figure, I have drawn a threshold at a posterior
+probability of 0.9, but this threshold is arbitary.
+
+**Important note:** In multi-marker mapping, a SNP is only included in
+the model if it is useful for predicting the trait. Therefore, if two
+SNPs nearby each other on the chromosome are almost perfectly
+correlated with each other, then only one will be included in the
+model. The posterior probabilities are calculated efficiently using a
+variational approximation. However, since the variational
+approximation does not accurately capture uncertainty in the included
+SNP when many SNPs are correlated with each other, it is best to
+interpret a high posterior probability in the genome-wide as meaning
+that the QTL is located somewhere nearby the SNP with the high
+posterior probability.
+
+A key aspect to the multi-marker mapping is that it also attempts to
+learn the *priors* from the data; that is, it estimates an additional
+set of parameters (the "hyperparameters") that specify the prior
+distribution of the coefficients in the regression. In the script,
+this hyperparameter estimation is implemented by trying different
+combinations of hyperparameters, and we choose the combination that
+fits the data best (*i.e.* that maximizes the probability of the data,
+or the likelihood).
+
+The combinations of hyperparameters that are determined by **sigma**,
+**sa** and **log10odds**, which are set near the beginning of the
+script. When the script has completed, the best combination of
+hyperparameters is **grid$sigma[i]**, **grid$sa[i]** and
+**grid$log10odds[i]**.
+
+**Questions**
+
++ Are the "significant" QTLs in the multi-marker mapping the same as
+the significant QTLs in the single-marker mapping results? Or, more
+precisely, do the QTLs with the strongest support in the multi-marker
+mapping correspond to the QTLs with the strongest support in the
+single-marker mapping? Does the association signal from the
+multi-marker mapping (the posterior probabilities) more closely
+resemble the single-marker mapping results with the polygenic effect,
+or without?
+
++ The second 
+
+
 
 In the inner loop, for each setting of the hyperparameters we
 calculate approximate posterior probabilities for the regression
@@ -406,10 +456,6 @@ coefficients corresponding to all the markers. The inner loop
 calculations are done efficiently using a *variational
 approximation*. (Alternatively, we could use MCMC to get better
 estimates of the posterior probabilities, but this is much slower.)
-
-
-
-**Questions**
 
 ###Exit slip
 

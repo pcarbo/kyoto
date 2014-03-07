@@ -5,7 +5,7 @@
 # SCRIPT PARAMETERS
 # -----------------
 phenotype  <- "freezetocue"  # Map QTLs for this phenotype.
-generation <- "F2"           # Map QTLs in mice from this generation.
+generation <- "F34"          # Map QTLs in mice from this generation.
 
 # Use these covariates in the QTL mapping.
 covariates <- c("sex","age","albino","agouti")
@@ -13,9 +13,9 @@ covariates <- c("sex","age","albino","agouti")
 # Candidate values of the variance of the residual (sigma), the prior
 # variance of the regression coefficients (sa), and the prior
 # log-odds of inclusion (log10odds)
-sigma     <- seq(0.1,0.3,0.1)
-sa        <- seq(0.01,0.1,0.02)
-log10odds <- seq(-1.5,-0.5,0.25)
+sigma     <- seq(0.1,0.4,0.1)
+sa        <- c(0.01,0.02,0.05,0.1,0.2)
+log10odds <- seq(-3,-1,0.25)
 
 # Initialize the random number generator.
 set.seed(7)
@@ -132,8 +132,8 @@ for (i in 1:ns) {
 
 # Get the posterior inclusion probabilities corresponding to the
 # combination of hyperparameters with the maximum likelihood.
-i      <- which.max(lnZ)
-PIP    <- alpha[,i]
+i   <- which.max(lnZ)
+PIP <- alpha[,i]
 
 # Create a data frame with the genome-wide scan.
 gwscan        <- empty.scanone(map)
@@ -149,7 +149,7 @@ par(ps = 9,font.lab = 1,font.main = 1,cex.main = 1,
 
 # Plot the posterior inclusion probabilities.
 plot(gwscan,incl.markers = FALSE,lwd = 2,bandcol = "powderblue",
-     col = "darkorange",gap = 0,xlab = "chromosome",ylab = "PIP",
+     col = "darkorange",gap = 0,xlab = "chromosome",ylab = "probability",
      main = paste0(phenotype,", ",generation," cross"))
 
 # Add the cutoff at a posterior probability of 0.9.
