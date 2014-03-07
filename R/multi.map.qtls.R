@@ -76,7 +76,8 @@ gp <- genoProb(zero.na(genotypes2counts(geno)),map,step = Inf,
                method = "Haldane")
 
 # Get the mean genotypes; that is, the expected number of times the B
-# allele occurs in each genotype.
+# allele occurs in each genotype. From now on, we will work with the
+# genotype matrix X.
 p1 <- gp$pr[,2,]
 p2 <- gp$pr[,3,]
 X  <- p1 + 2*p2
@@ -89,7 +90,7 @@ names(grid) <- c("sigma","sa","log10odds")
 grid        <- with(grid,cbind(sigma,sa,log10odds))
 
 # Get the number of markers (p) and the number of combinations of the
-# hyperparameters (ns).
+# hyperparameters to evaluate (ns).
 p  <- ncol(X)
 ns <- nrow(grid)
 
@@ -106,7 +107,8 @@ alpha0 <- runif(p)
 alpha0 <- alpha0 / sum(alpha0)
 mu0    <- rnorm(p)
 
-# Compute the residuals of the phenotype given the covariates.
+# Compute the residuals of the phenotype given the covariates, and
+# store these residuals in vector y.
 if (is.null(covariates)) {
   y <- pheno[,phenotype]
 } else {
@@ -126,7 +128,8 @@ for (i in 1:ns) {
   cat(sprintf("(%d) sigma = %0.1f, sa = %0.3f, logodds = %0.2f\n",
               i,grid[i,"sigma"],grid[i,"sa"],grid[i,"log10odds"]))
 
-  # Run the coordinate ascent algorithm.
+  # Run the coordinate ascent algorithm to optimize the free
+  # parameters specifying the approximate posterior distribution.
   out <- varbvsoptimize(X,y,grid[i,"sigma"],grid[i,"sa"],
                         log(10)*grid[i,"log10odds"],
                         alpha0,mu0,verbose = FALSE)
@@ -135,15 +138,11 @@ for (i in 1:ns) {
   mu[,i]    <- out$mu
 }
 
-# Get the posterior inclusion probabilities corresponding to the
-# combination of hyperparameters with the maximum likelihood.
+# Get the posterior inclusion probabilities (PIPs) corresponding to
+# the combination of hyperparameters that yields the largest
+# (approximate) likelihood.
 i   <- which.max(lnZ)
 PIP <- alpha[,i]
-
-# Create a data frame with the genome-wide scan.
-gwscan        <- empty.scanone(map)
-gwscan$lod    <- PIP
-names(gwscan) <- c("chr","pos","PIP")
 
 # PLOT GENOME-WIDE SCAN FROM varbvs
 # ---------------------------------
@@ -152,10 +151,15 @@ trellis.device(width = 7,height = 1.75,
 par(ps = 9,font.lab = 1,font.main = 1,cex.main = 1,
     mai = c(0.5,0.8,0.25,0.25),tck = -0.1)
 
+# Create a data frame with the genome-wide scan.
+gwscan        <- empty.scanone(map)
+gwscan$lod    <- PIP
+names(gwscan) <- c("chr","pos","PIP")
+
 # Plot the posterior inclusion probabilities.
 plot(gwscan,incl.markers = FALSE,lwd = 2,bandcol = "powderblue",
      col = "darkorange",gap = 0,xlab = "chromosome",ylab = "probability",
      main = paste0(phenotype,", ",generation," cross"))
 
-# Add the cutoff at a posterior probability of 0.9.
+# Add a "cutoff" at a posterior probability of 0.9.
 abline(0.9,0,col = "black",lty = "dotted")
