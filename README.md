@@ -404,8 +404,8 @@ parameters to
     covariates <- c("sex","age","albino","agouti")
 
 As before, we will compare the genome-wide scans in the F2 and F34
-mice, so run the script with **generation = "F2"** and **generation =
-"F34"**.
+mice, so run the script with **generation = "F2"** and with
+**generation = "F34"**.
 
 In order to correctly interpret the multi-marker mapping results, we
 first need cover a few important points:
@@ -415,38 +415,35 @@ association using LOD scores or p-values. In the multi-marker mapping,
 we use posterior probabilities; specifically, for a given SNP, we
 report the posterior probability that the coefficient in the linear
 regression is not zero, or the probability that the SNP is *included*
-in the regression (I call this the "posterior inclusion probability").
+in the regression (we call this the "posterior inclusion probability").
 This is what is plotted along the vertical axis of the figure.
 
-+ In the figure, I have drawn a threshold at a posterior probability
-of 0.9, but this threshold is arbitary.
++ Unlike single-marker mapping, there is no need to separately
+calculate a threshold for significance.In the figure, I have drawn a
+threshold at a posterior probability of 0.9, but this is purely
+arbitary.
 
-**Important note:** In multi-marker mapping, a SNP is only included in
-the model if it is useful for predicting the trait. Therefore, if two
-SNPs nearby each other on the chromosome are almost perfectly
-correlated with each other, then only one will be included in the
-model. The posterior probabilities are calculated efficiently using a
-variational approximation. However, since the variational
-approximation does not accurately capture uncertainty in the included
-SNP when many SNPs are correlated with each other, it is best to
-interpret a high posterior probability in the genome-wide as meaning
-that the QTL is located somewhere nearby the SNP with the high
-posterior probability.
++ The interpretation of these probabilities is somewhat complicated by
+the fact that I calculate the posterior probabilities
+*approximately*. This is done in order to make these calculations more
+efficient, so that we can tackle very large data sets. In particular,
+this approximation does not accurately capture the uncertainty in the
+included SNP when many nearby SNPs are strongly correlated with each
+other. Therefore, you should interpret a SNP with a high posterior
+probability as meaning that the QTL is located somewhere nearby the
+SNP.
 
-A key aspect to the multi-marker mapping is that it also attempts to
-learn the *priors* from the data; that is, it estimates an additional
-set of parameters (the "hyperparameters") that specify the prior
-distribution of the coefficients in the regression. In the script,
-this hyperparameter estimation is implemented by trying different
-combinations of hyperparameters, and we choose the combination that
-fits the data best (*i.e.* that maximizes the probability of the data,
-or the likelihood).
++ A key component of the multi-marker mapping is that it *fits the
+priors to the data*. More precisely, we have an additional set of
+parameters (the "hyperparameters") that specify the prior distribution
+of the regression coefficients. In the script, we try different
+combinations of hyperparameters (these combinations are chosen by
+hand), and we settle on the combination that best fits the data;
+*i.e.* the hyperparameter setting that maximizes the probability of
+the data. After running the script, the best combination of the
+hyperparameters is **grid[i,]**.
 
-The combinations of hyperparameters that are determined by **sigma**,
-**sa** and **log10odds**, which are set near the beginning of the
-script. When the script has completed, the best combination of
-hyperparameters is **grid$sigma[i]**, **grid$sa[i]** and
-**grid$log10odds[i]**.
++ In practice, a single 
 
 **Questions**
 
