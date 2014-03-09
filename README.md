@@ -374,14 +374,10 @@ on the genotypes, they calculate the realized matrix as **R <- (X *
 t(X)) / p**, where **X** is the *n* x *p* genotype matrix (*n* is the
 number of samples, and *p* is the number of markers; that is, **X** is
 the matrix populated with allele counts (0, 1 or 2), or the mean
-allele counts if there is some uncertainty in the genotypes. In my
-lecture, I claimed that this matrix would yield identical
-results. Implement this alternative relatedness matrix in the script,
-and demonstrate empirically that this relatedness matrix yields the
-same (or very similar) LOD scores at the SNPs. (In practice, there may
-be small differences when there is uncertainty in the genotypes, or
-due to the numerical procedures for computing the maximum likelihood
-estimates.)
+allele counts if there is some uncertainty in the genotypes. Implement
+this alternative relatedness matrix in the script, and demonstrate
+empirically that this relatedness matrix yields very similar LOD
+scores.
 
 ###Part B
 
