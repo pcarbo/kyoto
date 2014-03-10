@@ -214,7 +214,10 @@ will work with the R script [map.qtls.R](R/map.qtls.R).
 complete (as long as 15-20 minutes, depending on your computer). For
 this reason, I recommend working in teams of 3-4 so that each member
 of your team can run the script with different settings, and then you
-can compare the results you generated with your team members.
+can compare the results you generated with your team members. If it
+easier to work in a team of 2 people, I recommend focusing on the
+complex trait ("freezetocue"), and save analyses of the Mendelian
+trait ("albino") for later.
 
 **Important note #2:** Some of the more involved questions are
 optional; please focus on the non-optional questions, so that we have
@@ -474,5 +477,29 @@ interpreting this estimate?
 
 ###Exit slip
 
-They will return this back to me so that I can get feedback about the
-module.
+My hope is to get some feedback from all of you to find out which
+parts of the module where most successful. I would be grateful you
+could answer these three questions, and send me an email at
+pcarbo@uchicago.edu with your answers.
+
+1. Were you and your team members able to successfully execute all the
+steps in R? If not, which steps did you have trouble with?
+
+2. During this module, we explored the features of LMMs and
+multi-marker modeling by making observations about the results we
+obtained using different analysis approaches. Which observation did
+you find most **surprising**? Why was it so surprising? And what
+insight did it give you about the different analysis approaches?
+
+3. Is the topic of this module relevant to your research now? If yes,
+how is it relevant? If not, do you expect it to be relevant to your
+research in the future?
+
+Thank you for your time!
+
+###Acknowledgments
+
+Some of the code and data I used for this module was contributed by
+Abraham Palmer, Clarissa Parker, Mark Abney and Riyan Cheng. Also
+thank you to Fumihiko Matsuda and Mark Lathrop for organizing the
+workshop.
