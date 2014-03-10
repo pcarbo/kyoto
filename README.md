@@ -387,14 +387,14 @@ individuals?
 
 4. In human studies, people typically use a different realized
 relatedness matrix. Instead of calculating kinship coefficients based
-on the genotypes, they calculate the realized matrix as **R <- (X *
-t(X)) / p**, where **X** is the *n* x *p* genotype matrix (*n* is the
-number of samples, and *p* is the number of markers; that is, **X** is
-the matrix populated with allele counts (0, 1 or 2), or the mean
-allele counts if there is some uncertainty in the genotypes. Implement
-this alternative relatedness matrix in the script, and demonstrate
-empirically that this relatedness matrix yields very similar LOD
-scores.
+on the genotypes, they calculate the realized matrix as **R <-
+matrix.square(X)/p**, where **X** is the *n* x *p* genotype matrix,
+*n* is the number of samples, and *p* is the number of markers; that
+is, **X** is the matrix populated with allele counts (0, 1 or 2), or
+the mean allele counts if there is some uncertainty in the
+genotypes. Implement this alternative relatedness matrix in the
+script, and demonstrate empirically that this relatedness matrix
+yields very similar LOD scores.
 
 ###Part B
 
@@ -402,59 +402,60 @@ In Part B of this module, we will contrast our experiences so far with
 the approaches based on a single-marker linear regression to
 "multi-marker" approaches that simultaneously consider all SNPs as
 potential predictors of the phenotype. Our objective is to understand
-the features of the multi-marker mappingapproach, and to understand
-how to correctly interpret the results. For all of Part B, we will
-work with the [map.qtls.R](R/multi.map.qtls.R) script in R.
+the features of the multi-marker approach, and to understand how to
+correctly interpret the results. For all of Part B, we will work with
+the [map.qtls.R](R/multi.map.qtls.R) script in R.
 
 In Part B, we map QTLs for freezetocue only since the albino trait is
 not particularly challenging, as we have seen, and will not reveal
 anything particularly interesting about multi-marker mapping
-methods. (This should not stop you from trying multi-marker mapping
-for the albino trait.) Thus, for this module we set the script
+methods. (However, this should not stop you from trying multi-marker
+mapping for the albino trait!) Thus, for this module we set the script
 parameters to
 
     phenotype  <- "freezetocue"
     covariates <- c("sex","age","albino","agouti")
 
-As before, we will compare the genome-wide scans in the F2 and F34
-mice, so run the script with **generation = "F2"** and with
-**generation = "F34"**.
+As before, we compare the genome-wide scans in the F2 and F34 mice, so
+please run the script with **generation = "F2"** and with **generation
+= "F34"**.
 
 In order to correctly interpret the multi-marker mapping results, we
 first need cover a few important points:
 
-+ In the single-marker mapping, we typically quantify support for
-association using LOD scores or p-values. In the multi-marker mapping,
-we use posterior probabilities; specifically, for a given SNP, we
-report the posterior probability that the coefficient in the linear
-regression is not zero, or the probability that the SNP is *included*
-in the regression (we call this the "posterior inclusion probability").
-This is what is plotted along the vertical axis of the figure.
++ **Posterior probabilities**: In the single-marker mapping, we
+typically quantify support for association using LOD scores or
+p-values. In the multi-marker mapping, we use posterior probabilities;
+specifically, for a given SNP, we report the posterior probability
+that the coefficient in the linear regression is not zero, or the
+probability that the SNP is *included* in the regression (we call this
+the "posterior inclusion probability").  This is what is plotted along
+the vertical axis of the figure.
 
-+ Unlike single-marker mapping, there is no need to separately
-calculate a threshold for significance. In the figure, I have drawn a
-threshold at a posterior probability of 0.9, but this is an arbitary
-threshold.
++ **Significance thresholds**: Unlike single-marker mapping, there is
+no need to separately calculate a threshold for significance. In the
+figure, I have drawn a threshold at a posterior probability of 0.9,
+but this is an arbitary threshold.
 
-+ The interpretation of these probabilities is somewhat complicated by
-the fact that I calculate the posterior probabilities *approximately*.
-This is done in order to make these calculations more efficient, so
-that we can tackle very large data sets. In particular, this
-approximation does not accurately capture the uncertainty in the
-included SNP when many nearby SNPs are strongly correlated with each
-other. (We could use MCMC instead to get better estimates of the
-posterior probabilities, but this is much slower, and does not scale
-well to large data sets.) Therefore, you should interpret a SNP with a
-high posterior probability as meaning that the QTL is located
-somewhere nearby the SNP.
++ **Posterior approximation**: The interpretation of these
+probabilities is somewhat complicated by the fact that I calculate the
+posterior probabilities *approximately*.  This is done in order to
+make these calculations more efficient, so that we can tackle very
+large data sets. In particular, this approximation does not accurately
+capture the uncertainty in the included SNP when many nearby SNPs are
+strongly correlated with each other. (We could use MCMC instead to get
+better estimates of the posterior probabilities, but this is slower,
+and does not scale as well to large data sets.) Therefore, you should
+interpret a SNP with a high posterior probability as meaning that the
+QTL is located *somewhere nearby* the SNP.
 
-+ A key component of the multi-marker mapping is that it *fits the
-priors to the data*. More precisely, we have an additional set of
-parameters (the "hyperparameters") that specify the prior distribution
-of the regression coefficients. Fitting the priors to the data allows
-us to *calibrate* the posterior probabilities so that they better
-reflect the probability that the locus truly contains a causal
-polymorphism. In the script, we try different combinations of
++ **Model fitting**: A key component of the multi-marker mapping is
+that it *fits the priors to the data*. More precisely, we have an
+additional set of parameters (the "hyperparameters") that specify the
+prior distribution of the regression coefficients. Fitting the priors
+to the data allows us to *calibrate* the posterior probabilities so
+that they better reflect the probability that the locus truly contains
+a causal polymorphism. In the script, we try different combinations of
 hyperparameters (these combinations are chosen by hand), and we settle
 on the combination that best fits the data; *i.e.* the hyperparameter
 setting that maximizes the probability of the data. After running the
