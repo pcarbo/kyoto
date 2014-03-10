@@ -498,7 +498,7 @@ did it give you about the different analysis approaches?
 
 3. Is the topic of this module relevant to your current research? If
 yes, how is it relevant? If not, do you expect it to be relevant to
-your research in the future?
+your future research?
 
 I hope you enjoyed this module, and the workshop. Thank you for your
 time!
