@@ -29,28 +29,35 @@ The goal of this module is to explore linear mixed models (LMMs) and
 multi-marker models for identifying genetic variants correlated with a
 quantitative trait. LMMs and multi-marker mapping methods have been
 used to map genetic loci that contribute to risk of complex human
-diseases, but here we instead demonstrate the use of these methods for
-mapping quantitative trait loci (QTLs) in mice. Specifically, we work
-with data from an "advanced intercross" of inbred lab strains. In this
-module, our goal is to develop a better appreciation for the features
-of LMMs and multi-marker methods, when and why these approaches might
-be useful, and how to correctly interpret the results. The focus is on
-cultivating a better understanding of these methods by example; we
-will not explore the mathematical foundations of these methods, at
-least not in any detail.
+diseases. But here I demonstrate the the use of these methods for
+mapping quantitative trait loci (QTLs) in mice. Specifically, we will
+work with data from an "advanced intercross" of inbred lab strains. In
+this module, our goal is to develop a better appreciation for the
+features of LMMs and multi-marker methods, when and why these
+approaches might be useful, and how to correctly interpret the
+results. The focus is on cultivating a better understanding of these
+methods by example; in the lecture we will explore the mathematical
+foundations of these methods.
 
 An advanced intercross population has several features that make it
 well-suited for exploring data analysis procedures for genetic
-association studies: (1) the patterns of linkage disequilibrium are
-more predictable than in humans; (2) all the alleles are common; (3)
-the environment is better controlled, so environmental conditions are
-expected to play a smaller role in complex traits than in humans; and
-(4) we can trace each allele to one of the two inbred founders. As a
-result of (4), imputation of missing genotypes (and haplotypes) is
-more straightforward, we can determine whether the alleles from any
-two individuals at a given locus are identical-by-descent (IBD); in
-human studies, this is not possible (except under specific
-circumstances).
+association studies:
+
+1. The patterns of linkage disequilibrium are
+more predictable than in humans;
+
+2. All the alleles are common
+
+3. The environment is better controlled, so environmental conditions
+are expected to play a smaller role in complex traits than in humans;
+and
+
+4. We can trace each allele to one of the two inbred founders.
+
+As a result of 4, imputing missing genotypes is straightforward. Also,
+we can determine whether the alleles from any two individuals at a
+given locus are identical-by-descent (IBD); in human studies, this is
+usually not possible, or not so straightforward.
 
 ![Transmission of alleles in F2 cross.](figures/intercross.gif)
 **Illustration of the transmission of alleles in an F2 intercross.**
