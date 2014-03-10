@@ -219,7 +219,12 @@ easier to work in a team of 2 people, I recommend focusing on the
 complex trait ("freezetocue"), and save analyses of the Mendelian
 trait ("albino") for later.
 
-**Important note #2:** Some of the more involved questions are
+**Important note #2**: R/qtl and QTLRel may not be the best tools for
+very large genetic data sets (e.g. with more than 100,000 SNPs). For
+larger data sets, other programs written in C or Python will be more
+suitable for your data set.
+
+**Important note #3:** Some of the more involved questions are
 optional; please focus on the non-optional questions, so that we have
 time for Part B of the module. Later, if there is time we can return
 to the optional questions. 
