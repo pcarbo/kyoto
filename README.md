@@ -484,23 +484,24 @@ interpreting this estimate?
 
 My hope is to get some feedback from all of you to find out which
 parts of the module where most successful. I would be grateful you
-could answer these three questions, and send me an email at
+could answer the three questions below, and send me an email at
 pcarbo@uchicago.edu with your answers.
 
 1. Were you and your team members able to successfully execute all the
-steps in R? If not, which steps did you have trouble with?
+steps in R? If not, which steps did you have most trouble with?
 
 2. During this module, we explored the features of LMMs and
 multi-marker modeling by making observations about the results we
 obtained using different analysis approaches. Which observation did
-you find most **surprising**? Why was it so surprising? And what
-insight did it give you about the different analysis approaches?
+you find most surprising? Why was it so surprising? And what insight
+did it give you about the different analysis approaches?
 
-3. Is the topic of this module relevant to your research now? If yes,
-how is it relevant? If not, do you expect it to be relevant to your
-research in the future?
+3. Is the topic of this module relevant to your current research? If
+yes, how is it relevant? If not, do you expect it to be relevant to
+your research in the future?
 
-Thank you for your time!
+I hope you enjoyed this module, and the workshop. Thank you for your
+time!
 
 ###Acknowledgments
 
