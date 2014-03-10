@@ -474,10 +474,10 @@ of complexity.
 + To what extent do the QTLs with the strongest support in the
 multi-marker mapping (the highest posterior probabilities) overlap the
 QTLs with the strongest support in the single-marker mapping? Does the
-genome-wide association signal from the multi-marker mapping more
-closely resemble the results with the LMM (QTLRel), or the results
-using the basic linear regression (qtl)? How can we explain the
-similarities and differences in the support for QTLs?
+genome-wide association signal from the multi-marker mapping
+(posterior probabilities) more closely resemble the LOD scores from
+the LMM (LMM), or the results using the basic linear regression (qtl)?
+How can we explain the similarities or differences?
 
 + The second question concerns interpretation of the
 hyperparameters. Recall, the "best fit" hyperparameters are
@@ -486,7 +486,7 @@ genome-wide log-odds (**grid[i,"log10odds"]**), does the "best fit"
 value make sense for the F2 and F34 populations? How can you explain
 this estimate?
 
-+ Optional: **grid[i,"sa"]** gives the "best fit" for the prior
++ **Optional:** **grid[i,"sa"]** gives the "best fit" for the prior
 variance of the regression coefficients. Why should we be cautious in
 interpreting this estimate?
 
