@@ -219,21 +219,23 @@ will work with the R script [map.qtls.R](R/map.qtls.R).
 
 **Important note #1:** Some of the computations take a long time to
 complete (as long as 15-20 minutes, depending on your computer). For
-this reason, I recommend working in teams of 3-4 so that each member
-of your team can run the script with different settings, and then you
-can compare the results you generated with your team members. If it
-easier to work in a team of 2 people, I recommend focusing on the
-complex trait ("freezetocue"), and save analyses of the Mendelian
-trait ("albino") for later.
+this reason, I recommend working in teams (2-4 people) so that each
+member of your team can run the script with different settings, and
+then you can compare the results you generated with your team
+members. To save time, I recommend focusing on the complex trait
+("freezetocue"), and save analyses of the Mendelian trait ("albino")
+for later.
 
 **Important note #2**: R/qtl and QTLRel may not be the best tools for
-very large genetic data sets (e.g. with more than 100,000 SNPs). For
-larger data sets, other programs written in C or Python will be more
-suitable for your data set.
+working with very large genetic data sets (e.g. with more than 100,000
+SNPs). For larger data sets, other programs written in C or Python
+(e.g. GEMMA) will be more suitable for your data set. Also, only the
+MATLAB version of the varbvs package has been tested on large data
+sets.
 
 **Important note #3:** Some of the more involved questions are
 optional; please focus on the non-optional questions, so that we have
-time for Part B of the module. Later, if there is time we can return
+time for Part B of the module. Later, if there is time, we can return
 to the optional questions. 
 
 ####QTLs with and without a polygenic effect
@@ -242,7 +244,7 @@ Here we compare genome-wide scans for a polygenic trait in the F2 and
 F34 cohorts using: (1) a linear regression model that includes the
 "polygenic effect" (with a covariance matrix that is intended to
 capture population structure); (2) a linear regression model that does
-not include the polygenic effect.
+not include the polygenic effect (the "basic linear regression").
 
 We start by assessing support for SNPs that explain variance in a
 behavioural trait. The trait is freezing after exposure to tones
@@ -256,9 +258,9 @@ the parameters at the top of the **map.qtls.R** script as follows:
     threshold    <- 0.05
     covariates   <- c("sex","age","albino","agouti")
 
-Also, run the script with **generation = "F34"**. (This takes much
-longer to complete because many more SNPs are genotyped in the F34
-mice, so I recommend starting this early.)
+Also, try running the script with **generation = "F34"**. (This takes
+much longer to complete because many more SNPs are genotyped in the
+F34 mice, so I recommend starting this as soon as possible.)
 
 We will contrast these results against results on a Mendelian trait:
 whether the mouse's coat is white or not. (This "albino" trait is
@@ -271,27 +273,27 @@ attempt to map QTLs using a linear regression.) For this trait, set
 In total, you should run **map.qtls.R** 4 times with different
 parameter settings.
 
-The script calculates two sets of LOD scores for all available SNPs on
-chromosomes 1-19. Once all the calculations are completed, it displays
-the LOD scores for all the SNPs in one graphic. In the R workspace,
-the LOD scores are stored in two data frames: **gwscan.qtl** is the
-output from the qtl function **scanone** (this is also the light blue
-curve in the figure); and **gwscan.rel**, the output from the
-analogous function in **QTLRel**, scanOne (this is also the dark blue
-line in the figure).
+**LOD scores:** The script calculates two sets of LOD scores for all
+available SNPs on chromosomes 1-19. Once all the calculations are
+completed, it displays the LOD scores for all the SNPs in a single
+figure. In the R workspace, the LOD scores are stored in two data
+frames: **gwscan.qtl** is the output from the qtl function **scanone**
+(this is also the light blue curve in the figure); and **gwscan.rel**,
+the output from the analogous function in **QTLRel**, scanOne (this is
+also the dark blue line in the figure).
 
-To determine whether or not a LOD score constitutes "significant"
-support for an association between genotype and phenotype, we
-calculate a threshold for significance by estimating the distribution
-of LOD scores under the null hypothesis, then we take the threshold to
-be the 100(1 – *a*)th percentile of this distribution, with *a*
-= 0.05. It is recommended that the null distribution be estimated with
-a large number of replicates (at least 1000) to ensure that the
-threshold is fairly stable. But in this case I suggest you use a
-smaller number of replicates (**num.perm.qtl = 100**) so that the
-computations can be completed before you have to go home (or return to
-your hotel room)! This significance threshold is depicted by the
-dotted orange line in the figure.
+**Sigificance thresholds:** To determine whether or not a LOD score
+constitutes "significant" support for an association between genotype
+and phenotype, we calculate a threshold for significance by estimating
+the distribution of LOD scores under the null hypothesis, then we take
+the threshold to be the 100(1 – *a*)th percentile of this
+distribution, with *a* = 0.05. It is recommended that the null
+distribution be estimated with a large number of replicates (at least
+1000) to ensure that the threshold is fairly stable. But in this case
+I suggest you use a smaller number of replicates (**num.perm.qtl =
+100**) so that the computations can be completed before you have to go
+home or return to your hotel room. This significance threshold is
+shown by the dotted orange line in the figure.
 
 **Note:** This permutation procedure does not account for differences
 in genetic sharing among the AIL mice. I have also implemented a
@@ -313,18 +315,18 @@ and in the F34 mice? Do we identify different QTLs, or the same QTLs?
 basic linear regression compared to the LMM, in the F2 and F34
 cohorts? How can you explain these trends?
 
-3. It is also useful to compare the genome-wide scans in the F2 and F34
-generations, because the patterns of linkage disequilibrium are very
-different. (The F34 mice have accumulated many more recombinations.)
-Based on the results in freezetocue and albino, what can you say about
-the F2 and F34 mice in terms of: (1) ability to identify QTLs? (2)
-overlap in the QTLs? (3) ability to pinpoint the location of the
-genetic polymorphisms underlying these traits? Are the significance
-thresholds different in the F2 and F34 cohorts? If so, why? In what
-way do the two mapping methods behave differently in the F2 and F34
-populations?
+3. It is also useful to compare the genome-wide scans in the F2 and
+F34 generations, because the patterns of linkage disequilibrium are
+very different. (The F34 mice have accumulated many more
+recombinations.)  Based on the results in freezetocue (and albino),
+what do you observe about the F2 and F34 mice in terms of: (1) ability
+to identify QTLs? (2) overlap in the QTLs? (3) ability to pinpoint the
+location of the genetic polymorphisms underlying these traits? Are the
+significance thresholds different in the F2 and F34 cohorts? If so,
+why? In what way do the two mapping methods behave differently in the
+F2 and F34 populations?
 
-4. Optional: What locus do you identify for the albino trait? Does
+4. **Optional:** What locus do you identify for the albino trait? Does
 the QTL region overlap a known gene for this trait? Search for the
 associated SNPs in the [UCSC Genome Browser](http://genome.ucsc.edu)
 (Mouse Genome Assembly 37) to investigate this.
@@ -338,7 +340,7 @@ these chromosomes? These parameters are stored in matrix
 **vcparams**. See **help(estVC)** for a brief explanation of the
 corresponding variance components.
 
-6. Optional (though highly recommended!): Investigate the idea of
+6. **Optional, though highly recommended**: Investigate the idea of
 "proximal contamination" by modifying the script so that the matrix
 **R** is only calculated once using all SNPs. What happens to the LOD
 scores if we compute **R** only once using *all* markers? Can you
