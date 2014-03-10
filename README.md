@@ -79,8 +79,8 @@ subsequent generations to produce the advanced intercross. In the data
 set used for this module, we have phenotype and genotype data from F2
 mice, and in mice from the 34th generation of the advanced
 intercross. Understanding the features of an advanced intercross is
-not a central objective of this module, but it is useful to learn
-about this.
+not a central objective of this module (I've included some optional
+questions about this below).
 
 The quantitative traits we analyze were measured as part of a study of
 anxiety-like behaviour in mice. In the "conditioned fear" paradigm to
@@ -120,17 +120,17 @@ creating teaching modules for workshops!).
 
 ###Prerequisites
 
-1. You are comfortable using the R interface, executing R scripts,
-manipulating variables in R (e.g. vectors, matrices, lists, data
-frames), working with R functions, and making small modifications to R
-scripts.
+1. You are comfortable using the R interface and executing R
+scripts. It would also be helpful if you know how to manipulate
+variables in R (e.g. vectors, matrices, lists, data frames), work with
+R functions, and make small modifications to R scripts.
 
 2. You are familiar, or at least have exposure to, the basic notions
-and standard terminology used to describe the statistical analysis of
-genetic and genome-wide association studies.
+and standard terminology used to describe statistical analysis of
+genetic association studies.
 
-3. You are familiar with many of the core concepts in genetics and
-genetic analysis.
+3. You are familiar with core concepts in genetics and genetic
+analysis.
 
 ###Getting started
 
