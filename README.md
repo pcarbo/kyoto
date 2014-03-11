@@ -143,13 +143,20 @@ First, make sure you have a recent version of
 Next, download and install R packages
 [qtl](http://github.com/kbroman/qtl) and
 [QTLRel](http://github.com/pcarbo/QTLRel) using the
-**install.packages** function in R.
+**install.packages** function in R. We will also use the
+[varbvs](http://github.com/pcarbo/varbvs) package. You can also
+install this package using **install.packages**, but I recommend
+getting the most up-to-date version from github, which has a few bug
+fixes. Follow the "Quick start for R" instructions to install this
+package from the source code on github. In summary, enter the
+following commands in R:
 
-We will also use the [varbvs](http://github.com/pcarbo/varbvs)
-package. You can also install this package using **install.packages**,
-but I recommend getting the most up-to-date version from github, which
-has a few bug fixes. Follow the "Quick start for R" instructions to
-install this package from the source code on github.
+    Sys.setenv(http_proxy = "http://proxy.kuins.net:8080")
+	install.packages("qtl")
+	install.packages("QTLRel")
+	install.packages("varbvs")
+
+The first command configures your computer for the network proxy.
 
 Finally, you will need to download the source code for this
 module. The simplest way to do this is to [download this repository
