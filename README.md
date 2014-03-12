@@ -411,7 +411,7 @@ the approaches based on a single-marker linear regression to
 potential predictors of the phenotype. Our objective is to understand
 the features of the multi-marker approach, and to understand how to
 correctly interpret the results. For all of Part B, we will work with
-the [map.qtls.R](R/multi.map.qtls.R) script in R.
+the [multi.map.qtls.R](R/multi.map.qtls.R) script in R.
 
 In Part B, we map QTLs for freezetocue only since the albino trait is
 not particularly challenging, as we have seen, and will not reveal
