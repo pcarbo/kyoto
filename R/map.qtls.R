@@ -256,7 +256,8 @@ par(ps = 9,font.lab = 1,font.main = 1,cex.main = 1,
 plot(gwscan.qtl,incl.markers = FALSE,lwd = 4,bandcol = "powderblue",
      col = "dodgerblue",gap = 0,xlab = "chromosome",ylab = "LOD",
      ylim = c(0,ceiling(max(c(gwscan.qtl$lod,gwscan.rel$lod)))),
-     main = paste0(phenotype,", ",generation," cross"))
+     main = paste("light blue = model without polygenic effect (R/qtl),",
+                  "dark blue = with polygenic effect (QTLRel)"))
 
 # Plot the QTL mapping results from QTLRel.
 plot(gwscan.rel,incl.markers = FALSE,lwd = 2,bandcol = "powderblue",
