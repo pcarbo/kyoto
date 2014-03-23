@@ -165,8 +165,11 @@ Alternatively, if you have a github account, you can
 [fork](http://help.github.com/articles/fork-a-repo) the repository,
 and clone it on your local machine.
 
-Once you have completed these steps, you are ready to move on to the
-exercises below.
+Once you have completed these steps, you should be able to run the
+scripts in R by starting the program in the **kyoto/R** directory, or
+by changing the working directory in R to **kyoto/R** using the
+**setwd** function in R. (Here, **kyoto** is the name of the folder
+containing all the files you downloaded from this reposistory).
 
 ###Overview of data files
 
@@ -222,7 +225,10 @@ the same data as map.qtls.R.
 
 In Part A of this module, we investigate the linear mixed model (LMM)
 for mapping QTLs in the advanced intercross. For all of Part A, we
-will work with the R script [map.qtls.R](R/map.qtls.R).
+will work with the R script [map.qtls.R](R/map.qtls.R). You can run
+the script in R with the command **source("map.qtls.R")** provided
+that you have set the working directory to the directory containing
+this script.
 
 **Important note #1:** Some of the computations take a long time to
 complete (as long as 15-20 minutes, depending on your computer). For
@@ -248,10 +254,14 @@ to the optional questions.
 ####QTLs with and without a polygenic effect
 
 Here we compare genome-wide scans for a polygenic trait in the F2 and
-F34 cohorts using: (1) a linear regression model that includes the
-"polygenic effect" (with a covariance matrix that is intended to
-capture population structure); (2) a linear regression model that does
-not include the polygenic effect (the "basic linear regression").
+F34 cohorts using: (1) a linear regression model that does not include
+the polygenic effect (the "basic linear regression"); (2) a linear
+regression model that includes the "polygenic effect" (with a
+covariance matrix that is intended to capture population
+structure). Method #1 ignores unequal relatedness, and Method #2
+attempts to correct for this. Method #1 is implemented in "scanone"
+from the R/qtl library, and Method #2 is implemented in "scanOne" from
+the QTLRel library.
 
 We start by assessing support for SNPs that explain variance in a
 behavioural trait. The trait is freezing after exposure to tones
@@ -285,9 +295,10 @@ available SNPs on chromosomes 1-19. Once all the calculations are
 completed, it displays the LOD scores for all the SNPs in a single
 figure. In the R workspace, the LOD scores are stored in two data
 frames: **gwscan.qtl** is the output from the qtl function **scanone**
-(this is also the light blue curve in the figure); and **gwscan.rel**,
-the output from the analogous function in **QTLRel**, scanOne (this is
-also the dark blue line in the figure).
+which does not include the polygenic effect (this is also the light
+blue curve in the figure); and **gwscan.rel**, the output from the
+analogous function in **QTLRel**, scanOne, which includes the
+polygenic effect (this is also the dark blue line in the figure).
 
 **Sigificance thresholds:** To determine whether or not a LOD score
 constitutes "significant" support for an association between genotype
@@ -411,7 +422,10 @@ the approaches based on a single-marker linear regression to
 potential predictors of the phenotype. Our objective is to understand
 the features of the multi-marker approach, and to understand how to
 correctly interpret the results. For all of Part B, we will work with
-the [multi.map.qtls.R](R/multi.map.qtls.R) script in R.
+the [multi.map.qtls.R](R/multi.map.qtls.R) script in R. You can run
+the script in R with the command **source("multi.map.qtls.R")**
+provided that you have set the working directory to the directory
+containing this script.
 
 In Part B, we map QTLs for freezetocue only since the albino trait is
 not particularly challenging, as we have seen, and will not reveal
